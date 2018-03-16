@@ -14,6 +14,8 @@
 		B387646D205B54E3006154DB /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = B387646C205B54E3006154DB /* Assets.xcassets */; };
 		B3876470205B54E3006154DB /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = B387646E205B54E3006154DB /* LaunchScreen.storyboard */; };
 		B3876478205B6C73006154DB /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = B3876477205B6C73006154DB /* GoogleService-Info.plist */; };
+		B387647D205B8836006154DB /* GradientView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B387647C205B8836006154DB /* GradientView.swift */; };
+		B387647F205B8B3B006154DB /* RoundImageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B387647E205B8B3B006154DB /* RoundImageView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -28,6 +30,8 @@
 		B387646F205B54E3006154DB /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		B3876471205B54E3006154DB /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		B3876477205B6C73006154DB /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
+		B387647C205B8836006154DB /* GradientView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GradientView.swift; sourceTree = "<group>"; };
+		B387647E205B8B3B006154DB /* RoundImageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoundImageView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -80,8 +84,10 @@
 		B3876464205B54E3006154DB /* hitchhiker */ = {
 			isa = PBXGroup;
 			children = (
+				B387647B205B8808006154DB /* Model */,
+				B387647A205B87E7006154DB /* Controller */,
+				B3876479205B87E2006154DB /* View */,
 				B3876465205B54E3006154DB /* AppDelegate.swift */,
-				B3876467205B54E3006154DB /* ViewController.swift */,
 				B3876469205B54E3006154DB /* Main.storyboard */,
 				B387646C205B54E3006154DB /* Assets.xcassets */,
 				B387646E205B54E3006154DB /* LaunchScreen.storyboard */,
@@ -89,6 +95,30 @@
 				B3876471205B54E3006154DB /* Info.plist */,
 			);
 			path = hitchhiker;
+			sourceTree = "<group>";
+		};
+		B3876479205B87E2006154DB /* View */ = {
+			isa = PBXGroup;
+			children = (
+				B3876467205B54E3006154DB /* ViewController.swift */,
+				B387647C205B8836006154DB /* GradientView.swift */,
+				B387647E205B8B3B006154DB /* RoundImageView.swift */,
+			);
+			path = View;
+			sourceTree = "<group>";
+		};
+		B387647A205B87E7006154DB /* Controller */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = Controller;
+			sourceTree = "<group>";
+		};
+		B387647B205B8808006154DB /* Model */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = Model;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -230,7 +260,9 @@
 			buildActionMask = 2147483647;
 			files = (
 				B3876468205B54E3006154DB /* ViewController.swift in Sources */,
+				B387647F205B8B3B006154DB /* RoundImageView.swift in Sources */,
 				B3876466205B54E3006154DB /* AppDelegate.swift in Sources */,
+				B387647D205B8836006154DB /* GradientView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
