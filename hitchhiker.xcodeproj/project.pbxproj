@@ -8,6 +8,8 @@
 
 /* Begin PBXBuildFile section */
 		31DE36B6F7D7279DF70EBD38 /* Pods_hitchhiker.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 61AD24328831865D2CEE584A /* Pods_hitchhiker.framework */; };
+		B34EB89D205CBEBF00330C52 /* RoundedShadowView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B34EB89C205CBEBF00330C52 /* RoundedShadowView.swift */; };
+		B34EB89F205CCB2E00330C52 /* CircleView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B34EB89E205CCB2E00330C52 /* CircleView.swift */; };
 		B3876466205B54E3006154DB /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = B3876465205B54E3006154DB /* AppDelegate.swift */; };
 		B3876468205B54E3006154DB /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B3876467205B54E3006154DB /* ViewController.swift */; };
 		B387646B205B54E3006154DB /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = B3876469205B54E3006154DB /* Main.storyboard */; };
@@ -22,6 +24,8 @@
 		61AD24328831865D2CEE584A /* Pods_hitchhiker.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_hitchhiker.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		98114D863EC1CAB23AE837AA /* Pods-hitchhiker.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-hitchhiker.release.xcconfig"; path = "Pods/Target Support Files/Pods-hitchhiker/Pods-hitchhiker.release.xcconfig"; sourceTree = "<group>"; };
 		A1A9E1BF39E57602D2D7307B /* Pods-hitchhiker.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-hitchhiker.debug.xcconfig"; path = "Pods/Target Support Files/Pods-hitchhiker/Pods-hitchhiker.debug.xcconfig"; sourceTree = "<group>"; };
+		B34EB89C205CBEBF00330C52 /* RoundedShadowView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoundedShadowView.swift; sourceTree = "<group>"; };
+		B34EB89E205CCB2E00330C52 /* CircleView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CircleView.swift; sourceTree = "<group>"; };
 		B3876462205B54E3006154DB /* hitchhiker.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = hitchhiker.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		B3876465205B54E3006154DB /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		B3876467205B54E3006154DB /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
@@ -103,6 +107,8 @@
 				B3876467205B54E3006154DB /* ViewController.swift */,
 				B387647C205B8836006154DB /* GradientView.swift */,
 				B387647E205B8B3B006154DB /* RoundImageView.swift */,
+				B34EB89C205CBEBF00330C52 /* RoundedShadowView.swift */,
+				B34EB89E205CCB2E00330C52 /* CircleView.swift */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -259,8 +265,10 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				B34EB89F205CCB2E00330C52 /* CircleView.swift in Sources */,
 				B3876468205B54E3006154DB /* ViewController.swift in Sources */,
 				B387647F205B8B3B006154DB /* RoundImageView.swift in Sources */,
+				B34EB89D205CBEBF00330C52 /* RoundedShadowView.swift in Sources */,
 				B3876466205B54E3006154DB /* AppDelegate.swift in Sources */,
 				B387647D205B8836006154DB /* GradientView.swift in Sources */,
 			);

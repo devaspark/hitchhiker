@@ -16,6 +16,14 @@ class GradientView: UIView {
         setupGradientView()
     }
     
+    override func layoutSubviews() {
+        
+        gradient.frame.size.width = UIScreen.main.bounds.width
+        gradient.frame.size.height = self.frame.height
+        super.layoutSubviews()
+        self.bringSubview(toFront: self.subviews.first!) 
+    }
+    
     func setupGradientView() {
         gradient.frame = self.bounds
         gradient.colors = [UIColor.white.cgColor, UIColor.init(white: 1.0, alpha: 0.0).cgColor]
