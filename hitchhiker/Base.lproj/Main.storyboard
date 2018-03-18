@@ -78,17 +78,6 @@
                                     <constraint firstAttribute="height" constant="150" id="nFV-ls-chs"/>
                                 </constraints>
                             </view>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="RY7-XG-oBc">
-                                <rect key="frame" x="20" y="693" width="335" height="60"/>
-                                <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
-                                <constraints>
-                                    <constraint firstAttribute="height" constant="60" id="t7N-ZP-MJs"/>
-                                </constraints>
-                                <fontDescription key="fontDescription" name="AvenirNext-Bold" family="Avenir Next" pointSize="28"/>
-                                <state key="normal" title="REQUEST RIDE">
-                                    <color key="titleColor" red="0.22352941179999999" green="0.22352941179999999" blue="0.22352941179999999" alpha="1" colorSpace="calibratedRGB"/>
-                                </state>
-                            </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="l11-Ue-RzL">
                                 <rect key="frame" x="295" y="625" width="60" height="60"/>
                                 <constraints>
@@ -202,28 +191,69 @@
                                     </userDefinedRuntimeAttribute>
                                 </userDefinedRuntimeAttributes>
                             </view>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="qRX-kT-mxx">
+                                <rect key="frame" x="0.0" y="692" width="375" height="120"/>
+                                <subviews>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="RY7-XG-oBc" customClass="RoundedShadowButton" customModule="hitchhiker" customModuleProvider="target">
+                                        <rect key="frame" x="20" y="-5" width="335" height="60"/>
+                                        <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                                        <constraints>
+                                            <constraint firstAttribute="height" constant="60" id="t7N-ZP-MJs"/>
+                                        </constraints>
+                                        <fontDescription key="fontDescription" name="AvenirNext-Bold" family="Avenir Next" pointSize="28"/>
+                                        <state key="normal" title="REQUEST RIDE">
+                                            <color key="titleColor" red="0.22352941179999999" green="0.22352941179999999" blue="0.22352941179999999" alpha="1" colorSpace="calibratedRGB"/>
+                                        </state>
+                                        <userDefinedRuntimeAttributes>
+                                            <userDefinedRuntimeAttribute type="number" keyPath="cornerRadius">
+                                                <real key="value" value="5"/>
+                                            </userDefinedRuntimeAttribute>
+                                            <userDefinedRuntimeAttribute type="number" keyPath="shadowOpacity">
+                                                <real key="value" value="0.29999999999999999"/>
+                                            </userDefinedRuntimeAttribute>
+                                            <userDefinedRuntimeAttribute type="number" keyPath="shadowRadius">
+                                                <real key="value" value="10"/>
+                                            </userDefinedRuntimeAttribute>
+                                            <userDefinedRuntimeAttribute type="size" keyPath="shadowOffset">
+                                                <size key="value" width="0.0" height="0.0"/>
+                                            </userDefinedRuntimeAttribute>
+                                        </userDefinedRuntimeAttributes>
+                                        <connections>
+                                            <action selector="actionBtnPressed:" destination="BYZ-38-t0r" eventType="touchUpInside" id="q5N-3h-B9k"/>
+                                        </connections>
+                                    </button>
+                                </subviews>
+                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                                <constraints>
+                                    <constraint firstAttribute="trailing" secondItem="RY7-XG-oBc" secondAttribute="trailing" constant="20" id="MW3-36-zyD"/>
+                                    <constraint firstItem="RY7-XG-oBc" firstAttribute="leading" secondItem="qRX-kT-mxx" secondAttribute="leading" constant="20" id="Ohd-2C-g8v"/>
+                                    <constraint firstAttribute="bottom" secondItem="RY7-XG-oBc" secondAttribute="bottom" constant="65" id="jdh-nz-4Ej"/>
+                                    <constraint firstAttribute="height" constant="120" id="wLQ-OI-2yQ"/>
+                                </constraints>
+                            </view>
                         </subviews>
                         <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <constraints>
                             <constraint firstAttribute="bottom" secondItem="wAL-Di-cc6" secondAttribute="bottom" id="1tJ-hN-CU9"/>
+                            <constraint firstAttribute="bottom" secondItem="qRX-kT-mxx" secondAttribute="bottom" id="6Kl-J6-EI3"/>
                             <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" secondItem="Kvk-ka-G6F" secondAttribute="trailing" constant="20" id="AFo-Gu-qb8"/>
+                            <constraint firstItem="qRX-kT-mxx" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" id="Dod-Ad-YoE"/>
                             <constraint firstItem="HJV-e0-u5b" firstAttribute="top" secondItem="8bC-Xf-vdC" secondAttribute="top" id="FlE-an-Fe0"/>
-                            <constraint firstItem="RY7-XG-oBc" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" constant="20" id="Og7-Bu-x00"/>
                             <constraint firstItem="Kvk-ka-G6F" firstAttribute="top" secondItem="pTi-d0-1HO" secondAttribute="bottom" constant="17" id="QIU-ol-Aw8"/>
                             <constraint firstItem="HJV-e0-u5b" firstAttribute="trailing" secondItem="6Tk-OE-BBY" secondAttribute="trailing" id="Sjl-5V-XJW"/>
                             <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" secondItem="l11-Ue-RzL" secondAttribute="trailing" constant="20" id="SnR-3f-pwa"/>
                             <constraint firstItem="HJV-e0-u5b" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" id="Vzx-PO-v04"/>
-                            <constraint firstItem="RY7-XG-oBc" firstAttribute="top" secondItem="l11-Ue-RzL" secondAttribute="bottom" constant="8" id="Zgx-XF-6ah"/>
+                            <constraint firstItem="qRX-kT-mxx" firstAttribute="trailing" secondItem="6Tk-OE-BBY" secondAttribute="trailing" id="axD-wk-wHy"/>
                             <constraint firstItem="wAL-Di-cc6" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" id="hn6-gE-Z4s"/>
                             <constraint firstItem="wAL-Di-cc6" firstAttribute="top" secondItem="8bC-Xf-vdC" secondAttribute="top" id="kyV-2E-jEf"/>
-                            <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" secondItem="RY7-XG-oBc" secondAttribute="trailing" constant="20" id="nZO-va-Is4"/>
+                            <constraint firstItem="qRX-kT-mxx" firstAttribute="top" secondItem="l11-Ue-RzL" secondAttribute="bottom" constant="7" id="mqQ-Wu-ch2"/>
                             <constraint firstItem="wAL-Di-cc6" firstAttribute="trailing" secondItem="6Tk-OE-BBY" secondAttribute="trailing" id="pXF-yW-X8M"/>
                             <constraint firstItem="Kvk-ka-G6F" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" constant="20" id="tGF-dX-mhM"/>
-                            <constraint firstItem="6Tk-OE-BBY" firstAttribute="bottom" secondItem="RY7-XG-oBc" secondAttribute="bottom" constant="25" id="zFm-Cs-UhL"/>
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
                     </view>
                     <connections>
+                        <outlet property="actionBtn" destination="RY7-XG-oBc" id="xoO-k3-nFL"/>
                         <outlet property="mapView" destination="wAL-Di-cc6" id="46c-qg-f5B"/>
                     </connections>
                 </viewController>
