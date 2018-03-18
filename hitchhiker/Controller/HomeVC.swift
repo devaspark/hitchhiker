@@ -1,5 +1,5 @@
 //
-//  ViewController.swift
+//  HomeVC.swift
 //  hitchhiker
 //
 //  Created by Rex Kung on 3/15/18.
@@ -9,19 +9,28 @@
 import UIKit
 import MapKit
 
-class ViewController: UIViewController, MKMapViewDelegate {
+class HomeVC: UIViewController, MKMapViewDelegate {
 
     @IBOutlet weak var mapView: MKMapView!
     @IBOutlet weak var actionBtn: RoundedShadowButton!
     
+    var delegate: CenterVCDelegate?
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         mapView.delegate = self
+
         // Do any additional setup after loading the view, typically from a nib.
     }
 
     @IBAction func actionBtnPressed(_ sender: Any) {
         actionBtn.animateButton(shouldLoad: true, withMessage: nil)
+    }
+    
+    @IBOutlet weak var menuBtnPressed: UIButton!
+    
+    @IBAction func menuBtnPressed(_ sender: UIButton) {
+        delegate?.toggleLeftMenu()
     }
     
 }
