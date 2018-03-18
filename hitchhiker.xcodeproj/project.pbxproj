@@ -12,6 +12,8 @@
 		B334C52A205E3544009B3EAE /* LeftMenuBarVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = B334C529205E3544009B3EAE /* LeftMenuBarVC.swift */; };
 		B334C52C205E35A7009B3EAE /* ContainerVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = B334C52B205E35A7009B3EAE /* ContainerVC.swift */; };
 		B334C52F205E3826009B3EAE /* CenterVCDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = B334C52E205E3826009B3EAE /* CenterVCDelegate.swift */; };
+		B33F5696205EFE8000DD540E /* UIViewExt.swift in Sources */ = {isa = PBXBuildFile; fileRef = B33F5695205EFE8000DD540E /* UIViewExt.swift */; };
+		B33F5698205F0C8900DD540E /* LoginVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = B33F5697205F0C8900DD540E /* LoginVC.swift */; };
 		B34EB89D205CBEBF00330C52 /* RoundedShadowView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B34EB89C205CBEBF00330C52 /* RoundedShadowView.swift */; };
 		B34EB89F205CCB2E00330C52 /* CircleView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B34EB89E205CCB2E00330C52 /* CircleView.swift */; };
 		B3876466205B54E3006154DB /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = B3876465205B54E3006154DB /* AppDelegate.swift */; };
@@ -32,6 +34,8 @@
 		B334C529205E3544009B3EAE /* LeftMenuBarVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LeftMenuBarVC.swift; sourceTree = "<group>"; };
 		B334C52B205E35A7009B3EAE /* ContainerVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContainerVC.swift; sourceTree = "<group>"; };
 		B334C52E205E3826009B3EAE /* CenterVCDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CenterVCDelegate.swift; sourceTree = "<group>"; };
+		B33F5695205EFE8000DD540E /* UIViewExt.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIViewExt.swift; sourceTree = "<group>"; };
+		B33F5697205F0C8900DD540E /* LoginVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginVC.swift; sourceTree = "<group>"; };
 		B34EB89C205CBEBF00330C52 /* RoundedShadowView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoundedShadowView.swift; sourceTree = "<group>"; };
 		B34EB89E205CCB2E00330C52 /* CircleView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CircleView.swift; sourceTree = "<group>"; };
 		B3876462205B54E3006154DB /* hitchhiker.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = hitchhiker.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -83,6 +87,14 @@
 			path = Protocols;
 			sourceTree = "<group>";
 		};
+		B33F5694205EFE7200DD540E /* Extensions */ = {
+			isa = PBXGroup;
+			children = (
+				B33F5695205EFE8000DD540E /* UIViewExt.swift */,
+			);
+			path = Extensions;
+			sourceTree = "<group>";
+		};
 		B3876459205B54E3006154DB = {
 			isa = PBXGroup;
 			children = (
@@ -104,6 +116,7 @@
 		B3876464205B54E3006154DB /* hitchhiker */ = {
 			isa = PBXGroup;
 			children = (
+				B33F5694205EFE7200DD540E /* Extensions */,
 				B334C52D205E3815009B3EAE /* Protocols */,
 				B387647B205B8808006154DB /* Model */,
 				B387647A205B87E7006154DB /* Controller */,
@@ -136,6 +149,7 @@
 				B334C52B205E35A7009B3EAE /* ContainerVC.swift */,
 				B3876467205B54E3006154DB /* HomeVC.swift */,
 				B334C529205E3544009B3EAE /* LeftMenuBarVC.swift */,
+				B33F5697205F0C8900DD540E /* LoginVC.swift */,
 			);
 			path = Controller;
 			sourceTree = "<group>";
@@ -287,9 +301,11 @@
 			files = (
 				B334C52F205E3826009B3EAE /* CenterVCDelegate.swift in Sources */,
 				B334C528205E0810009B3EAE /* RoundedShadowButton.swift in Sources */,
+				B33F5698205F0C8900DD540E /* LoginVC.swift in Sources */,
 				B334C52A205E3544009B3EAE /* LeftMenuBarVC.swift in Sources */,
 				B34EB89F205CCB2E00330C52 /* CircleView.swift in Sources */,
 				B334C52C205E35A7009B3EAE /* ContainerVC.swift in Sources */,
+				B33F5696205EFE8000DD540E /* UIViewExt.swift in Sources */,
 				B3876468205B54E3006154DB /* HomeVC.swift in Sources */,
 				B387647F205B8B3B006154DB /* RoundImageView.swift in Sources */,
 				B34EB89D205CBEBF00330C52 /* RoundedShadowView.swift in Sources */,
