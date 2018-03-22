@@ -25,6 +25,8 @@
 		B3876478205B6C73006154DB /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = B3876477205B6C73006154DB /* GoogleService-Info.plist */; };
 		B387647D205B8836006154DB /* GradientView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B387647C205B8836006154DB /* GradientView.swift */; };
 		B387647F205B8B3B006154DB /* RoundImageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B387647E205B8B3B006154DB /* RoundImageView.swift */; };
+		B398822120633A29002A0547 /* DataService.swift in Sources */ = {isa = PBXBuildFile; fileRef = B398822020633A29002A0547 /* DataService.swift */; };
+		B398822320633ADE002A0547 /* AuthService.swift in Sources */ = {isa = PBXBuildFile; fileRef = B398822220633ADE002A0547 /* AuthService.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -50,6 +52,8 @@
 		B3876477205B6C73006154DB /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		B387647C205B8836006154DB /* GradientView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GradientView.swift; sourceTree = "<group>"; };
 		B387647E205B8B3B006154DB /* RoundImageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoundImageView.swift; sourceTree = "<group>"; };
+		B398822020633A29002A0547 /* DataService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataService.swift; sourceTree = "<group>"; };
+		B398822220633ADE002A0547 /* AuthService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthService.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -118,6 +122,7 @@
 		B3876464205B54E3006154DB /* hitchhiker */ = {
 			isa = PBXGroup;
 			children = (
+				B398821F20633A15002A0547 /* Services */,
 				B33F5694205EFE7200DD540E /* Extensions */,
 				B334C52D205E3815009B3EAE /* Protocols */,
 				B387647B205B8808006154DB /* Model */,
@@ -162,6 +167,15 @@
 			children = (
 			);
 			path = Model;
+			sourceTree = "<group>";
+		};
+		B398821F20633A15002A0547 /* Services */ = {
+			isa = PBXGroup;
+			children = (
+				B398822020633A29002A0547 /* DataService.swift */,
+				B398822220633ADE002A0547 /* AuthService.swift */,
+			);
+			path = Services;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -258,17 +272,29 @@
 			);
 			inputPaths = (
 				"${SRCROOT}/Pods/Target Support Files/Pods-hitchhiker/Pods-hitchhiker-frameworks.sh",
+				"${BUILT_PRODUCTS_DIR}/BoringSSL/openssl.framework",
 				"${BUILT_PRODUCTS_DIR}/GTMSessionFetcher/GTMSessionFetcher.framework",
 				"${BUILT_PRODUCTS_DIR}/GoogleToolboxForMac/GoogleToolboxForMac.framework",
+				"${BUILT_PRODUCTS_DIR}/Protobuf/Protobuf.framework",
 				"${BUILT_PRODUCTS_DIR}/RevealingSplashView/RevealingSplashView.framework",
+				"${BUILT_PRODUCTS_DIR}/gRPC/GRPCClient.framework",
+				"${BUILT_PRODUCTS_DIR}/gRPC-Core/grpc.framework",
+				"${BUILT_PRODUCTS_DIR}/gRPC-ProtoRPC/ProtoRPC.framework",
+				"${BUILT_PRODUCTS_DIR}/gRPC-RxLibrary/RxLibrary.framework",
 				"${BUILT_PRODUCTS_DIR}/leveldb-library/leveldb.framework",
 				"${BUILT_PRODUCTS_DIR}/nanopb/nanopb.framework",
 			);
 			name = "[CP] Embed Pods Frameworks";
 			outputPaths = (
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/openssl.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/GTMSessionFetcher.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/GoogleToolboxForMac.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Protobuf.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/RevealingSplashView.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/GRPCClient.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/grpc.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/ProtoRPC.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/RxLibrary.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/leveldb.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/nanopb.framework",
 			);
@@ -311,8 +337,10 @@
 				B33F5696205EFE8000DD540E /* UIViewExt.swift in Sources */,
 				B3876468205B54E3006154DB /* HomeVC.swift in Sources */,
 				B387647F205B8B3B006154DB /* RoundImageView.swift in Sources */,
+				B398822120633A29002A0547 /* DataService.swift in Sources */,
 				B34EB89D205CBEBF00330C52 /* RoundedShadowView.swift in Sources */,
 				B33F569A205F4BC200DD540E /* RoundedCornerTextField.swift in Sources */,
+				B398822320633ADE002A0547 /* AuthService.swift in Sources */,
 				B3876466205B54E3006154DB /* AppDelegate.swift in Sources */,
 				B387647D205B8836006154DB /* GradientView.swift in Sources */,
 			);

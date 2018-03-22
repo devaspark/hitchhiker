@@ -7,11 +7,19 @@
 //
 
 import UIKit
+import Firebase
 
-class LoginVC: UIViewController {
+class LoginVC: UIViewController, UITextFieldDelegate {
 
+    @IBOutlet weak var emailField: RoundedCornerTextField!
+    @IBOutlet weak var passwordField: RoundedCornerTextField!
+    @IBOutlet weak var segmentedControl: UISegmentedControl!
+    @IBOutlet weak var authBtn: RoundedShadowButton!
+    
     override func viewDidLoad() {
         super.viewDidLoad()
+        emailField.delegate = self
+        passwordField.delegate = self
         view.bindToKeyboard()
         
         let tap = UITapGestureRecognizer(target: self, action: #selector(handleScreenTap(sender:)))
@@ -27,5 +35,30 @@ class LoginVC: UIViewController {
         dismiss(animated: true, completion: nil)
     }
     
-
+    @IBAction func authBtnPressed(_ sender: Any) {
+        if emailField.text != nil && passwordField != nil {
+            authBtn.animateButton(shouldLoad: true, withMessage: nil)
+            self.view.endEditing(true)
+            
+            if let email = emailField.text, let password = passwordField.text {
+                if self.segmentedControl.selectedSegmentIndex == 0 {
+                    AuthService.instance.login(email: email, password: password, isDriver: false, onComplete: { (isError, errorMsg) in
+                        if(!isError){
+                            
+                            self.dismiss(animated: true, completion: nil)
+                        }
+                    })
+                    
+                    
+                } else {
+                    AuthService.instance.login(email: email, password: password, isDriver: true, onComplete: { (isError, errorMsg) in
+                        if(!isError){
+                            self.dismiss(animated: true, completion: nil)
+                        }
+                    })
+                }
+            }
+        }
+    }
+    
 }

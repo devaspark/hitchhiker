@@ -7,6 +7,7 @@ target 'hitchhiker' do
 
   # Pods for hitchhiker
   pod 'Firebase/Core'
+  pod 'Firebase/Firestore'
   pod 'Firebase/Auth'
   pod 'Firebase/Database'
   pod 'RevealingSplashView'
