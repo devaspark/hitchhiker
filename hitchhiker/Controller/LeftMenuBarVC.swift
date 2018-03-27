@@ -56,7 +56,7 @@ class LeftMenuBarVC: UIViewController {
         DataService.instance.REF_USERS.getDocuments { (snapshot, error) in
             if let snapshot = snapshot?.documents {
                 for snap in snapshot {
-                    if snap.documentID == Auth.auth().currentUser?.uid {
+                    if snap.documentID == self.currentUserID! {
                         self.userAccountTypeLbl.text = "PASSENGER"
                     }
                 }
@@ -66,19 +66,13 @@ class LeftMenuBarVC: UIViewController {
         DataService.instance.REF_DRIVERS.getDocuments { (snapshot, error) in
             if let snapshot = snapshot?.documents {
                 for snap in snapshot {
-                    if snap.documentID == Auth.auth().currentUser?.uid {
+                    if snap.documentID == self.currentUserID! {
                         self.userAccountTypeLbl.text = "DRIVER"
                         self.pickupModeLbl.isHidden = false
                         self.pickupModeSwitch.isHidden = false
-                        print("It got here")
-                        print(snap.data())
                         let data = snap.data()
                         let switchStatus = data["isPickupModeEnabled"] as! Bool
-                        print("this is the pickup mode \(data["isPickupModeEnabled"] as! Bool)")
                         self.pickupModeSwitch.isOn = switchStatus
-                        
-                        
-                        
                         
                     }
                 }

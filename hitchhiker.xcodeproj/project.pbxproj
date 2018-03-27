@@ -15,6 +15,7 @@
 		B33F5696205EFE8000DD540E /* UIViewExt.swift in Sources */ = {isa = PBXBuildFile; fileRef = B33F5695205EFE8000DD540E /* UIViewExt.swift */; };
 		B33F5698205F0C8900DD540E /* LoginVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = B33F5697205F0C8900DD540E /* LoginVC.swift */; };
 		B33F569A205F4BC200DD540E /* RoundedCornerTextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = B33F5699205F4BC200DD540E /* RoundedCornerTextField.swift */; };
+		B34D4BC8206A26060058BBD0 /* LocationService.swift in Sources */ = {isa = PBXBuildFile; fileRef = B34D4BC7206A26060058BBD0 /* LocationService.swift */; };
 		B34EB89D205CBEBF00330C52 /* RoundedShadowView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B34EB89C205CBEBF00330C52 /* RoundedShadowView.swift */; };
 		B34EB89F205CCB2E00330C52 /* CircleView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B34EB89E205CCB2E00330C52 /* CircleView.swift */; };
 		B3876466205B54E3006154DB /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = B3876465205B54E3006154DB /* AppDelegate.swift */; };
@@ -40,6 +41,7 @@
 		B33F5695205EFE8000DD540E /* UIViewExt.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIViewExt.swift; sourceTree = "<group>"; };
 		B33F5697205F0C8900DD540E /* LoginVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginVC.swift; sourceTree = "<group>"; };
 		B33F5699205F4BC200DD540E /* RoundedCornerTextField.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoundedCornerTextField.swift; sourceTree = "<group>"; };
+		B34D4BC7206A26060058BBD0 /* LocationService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationService.swift; sourceTree = "<group>"; };
 		B34EB89C205CBEBF00330C52 /* RoundedShadowView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoundedShadowView.swift; sourceTree = "<group>"; };
 		B34EB89E205CCB2E00330C52 /* CircleView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CircleView.swift; sourceTree = "<group>"; };
 		B3876462205B54E3006154DB /* hitchhiker.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = hitchhiker.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -101,6 +103,13 @@
 			path = Extensions;
 			sourceTree = "<group>";
 		};
+		B34D4BC9206A27A10058BBD0 /* Constants */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = Constants;
+			sourceTree = "<group>";
+		};
 		B3876459205B54E3006154DB = {
 			isa = PBXGroup;
 			children = (
@@ -122,6 +131,7 @@
 		B3876464205B54E3006154DB /* hitchhiker */ = {
 			isa = PBXGroup;
 			children = (
+				B34D4BC9206A27A10058BBD0 /* Constants */,
 				B398821F20633A15002A0547 /* Services */,
 				B33F5694205EFE7200DD540E /* Extensions */,
 				B334C52D205E3815009B3EAE /* Protocols */,
@@ -174,6 +184,7 @@
 			children = (
 				B398822020633A29002A0547 /* DataService.swift */,
 				B398822220633ADE002A0547 /* AuthService.swift */,
+				B34D4BC7206A26060058BBD0 /* LocationService.swift */,
 			);
 			path = Services;
 			sourceTree = "<group>";
@@ -342,6 +353,7 @@
 				B33F569A205F4BC200DD540E /* RoundedCornerTextField.swift in Sources */,
 				B398822320633ADE002A0547 /* AuthService.swift in Sources */,
 				B3876466205B54E3006154DB /* AppDelegate.swift in Sources */,
+				B34D4BC8206A26060058BBD0 /* LocationService.swift in Sources */,
 				B387647D205B8836006154DB /* GradientView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
