@@ -89,6 +89,9 @@
                                     <constraint firstAttribute="height" constant="60" id="b8k-lp-QsX"/>
                                 </constraints>
                                 <state key="normal" image="centerMapBtn"/>
+                                <connections>
+                                    <action selector="centerMapBtnPressed:" destination="BYZ-38-t0r" eventType="touchUpInside" id="eD4-Qh-QxJ"/>
+                                </connections>
                             </button>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Kvk-ka-G6F" customClass="RoundedShadowView" customModule="hitchhiker" customModuleProvider="target">
                                 <rect key="frame" x="20" y="92" width="335" height="75"/>
