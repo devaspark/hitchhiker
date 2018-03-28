@@ -18,7 +18,7 @@ class LocationService {
         let userRef = DataService.instance.REF_USERS.document((Auth.auth().currentUser?.uid)!)
         userRef.getDocument { (docSnapshot, error) in
             if error == nil {
-                DataService.instance.REF_USERS.document((Auth.auth().currentUser?.uid)!).updateData(["coordinate": [coordinate.latitude, coordinate.longitude]])
+                DataService.instance.REF_USERS.document((Auth.auth().currentUser?.uid)!).setData(["coordinate": [coordinate.latitude, coordinate.longitude]])
             } else {
                 print("Error occurred fetching user data for location update")
             }
@@ -27,16 +27,14 @@ class LocationService {
     
     func updateDriverLocation(withCoordinate coordinate: CLLocationCoordinate2D) {
         let driverRef = DataService.instance.REF_DRIVERS.document((Auth.auth().currentUser?.uid)!)
+        
         driverRef.getDocument { (docSnapshot, error) in
-            if error == nil {
-                print("did it get here?")
-                let data = docSnapshot?.data()
-                print((Auth.auth().currentUser?.uid)!)
-                print(data)
-                let pickupModeStatus = data!["isPickupModeEnabled"] as! Bool
+            if let docSnapshot = docSnapshot {
+                let data = docSnapshot.data()
+                let pickupModeStatus = data["isPickupModeEnabled"] as! Bool
                 if pickupModeStatus == true {
-                    print("did it get into pickup model enabled")
-                    DataService.instance.REF_DRIVERS.document((Auth.auth().currentUser?.uid)!).updateData(["coordinate": [coordinate.latitude, coordinate.longitude]])
+                    guard let uid = Auth.auth().currentUser?.uid else {return}
+                    DataService.instance.REF_DRIVERS.document(uid).setData(["coordinate": [coordinate.latitude, coordinate.longitude]], options: SetOptions.merge())
                 }
             } else {
                 print("Error occurred fetching driver data for location update")

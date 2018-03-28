@@ -34,7 +34,7 @@ class LeftMenuBarVC: UIViewController {
         pickupModeSwitch.isHidden = true
         pickupModeLbl.isHidden = true
         
-        observePassengersAndDrivers()
+        
         
         if Auth.auth().currentUser == nil {
             userEmailLbl.text = ""
@@ -42,6 +42,7 @@ class LeftMenuBarVC: UIViewController {
             userImageView.isHidden = true
             loginOutBtn.setTitle("Sign Up / Login", for: .normal)
         } else {
+            observePassengersAndDrivers()
             userEmailLbl.text = Auth.auth().currentUser?.email
             userAccountTypeLbl.text = ""
             userImageView.isHidden = false
@@ -56,7 +57,7 @@ class LeftMenuBarVC: UIViewController {
         DataService.instance.REF_USERS.getDocuments { (snapshot, error) in
             if let snapshot = snapshot?.documents {
                 for snap in snapshot {
-                    if snap.documentID == self.currentUserID! {
+                    if snap.documentID == Auth.auth().currentUser?.uid {
                         self.userAccountTypeLbl.text = "PASSENGER"
                     }
                 }
@@ -66,7 +67,7 @@ class LeftMenuBarVC: UIViewController {
         DataService.instance.REF_DRIVERS.getDocuments { (snapshot, error) in
             if let snapshot = snapshot?.documents {
                 for snap in snapshot {
-                    if snap.documentID == self.currentUserID! {
+                    if snap.documentID == Auth.auth().currentUser?.uid {
                         self.userAccountTypeLbl.text = "DRIVER"
                         self.pickupModeLbl.isHidden = false
                         self.pickupModeSwitch.isHidden = false
@@ -84,11 +85,11 @@ class LeftMenuBarVC: UIViewController {
         if pickupModeSwitch.isOn {
             pickupModeLbl.text = "PICKUP MODE ENABLED"
             appDelegate.containerVC.toggleLeftMenu()
-            DataService.instance.REF_DRIVERS.document(currentUserID!).updateData(["isPickupModeEnabled" : true])
+            DataService.instance.REF_DRIVERS.document((Auth.auth().currentUser?.uid)!).updateData(["isPickupModeEnabled" : true])
         } else {
             pickupModeLbl.text = "PICKUP MODE DISABLED"
             appDelegate.containerVC.toggleLeftMenu()
-            DataService.instance.REF_DRIVERS.document(currentUserID!).updateData(["isPickupModeEnabled" : false])
+            DataService.instance.REF_DRIVERS.document((Auth.auth().currentUser?.uid)!).updateData(["isPickupModeEnabled" : false])
         }
     }
     
