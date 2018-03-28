@@ -35,7 +35,7 @@ class HomeVC: UIViewController {
         mapView.delegate = self
         
         centerMapOnUserLocation()
-        loadDriverAnnoationsFromFB()
+        
         
         DataService.instance.REF_DRIVERS.addSnapshotListener { (querySnapshot, error) in
             self.loadDriverAnnoationsFromFB()
@@ -137,9 +137,16 @@ extension HomeVC: CLLocationManagerDelegate {
 extension HomeVC: MKMapViewDelegate {
     func mapView(_ mapView: MKMapView, didUpdate userLocation: MKUserLocation) {
         if (Auth.auth().currentUser != nil) {
-            
-            LocationService.instance.updateUserLocation(withCoordinate: userLocation.coordinate)
-            LocationService.instance.updateDriverLocation(withCoordinate: userLocation.coordinate)
+            //Todo: detect which type of user is here, need to separate out user and driver location
+            if let userIsDriver = AuthService.instance.isDriver {
+                if userIsDriver == true {
+                    LocationService.instance.updateDriverLocation(withCoordinate: userLocation.coordinate)
+                }
+                
+                if userIsDriver == false {
+                    LocationService.instance.updateUserLocation(withCoordinate: userLocation.coordinate)
+                }
+            }
         }
     }
     

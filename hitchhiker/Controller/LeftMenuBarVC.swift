@@ -59,6 +59,7 @@ class LeftMenuBarVC: UIViewController {
                 for snap in snapshot {
                     if snap.documentID == Auth.auth().currentUser?.uid {
                         self.userAccountTypeLbl.text = "PASSENGER"
+                        AuthService.instance.isDriver = false
                     }
                 }
             }
@@ -69,6 +70,7 @@ class LeftMenuBarVC: UIViewController {
                 for snap in snapshot {
                     if snap.documentID == Auth.auth().currentUser?.uid {
                         self.userAccountTypeLbl.text = "DRIVER"
+                        AuthService.instance.isDriver = true
                         self.pickupModeLbl.isHidden = false
                         self.pickupModeSwitch.isHidden = false
                         let data = snap.data()

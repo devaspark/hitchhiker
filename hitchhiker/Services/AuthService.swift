@@ -19,6 +19,17 @@ class AuthService {
         return _instance
     }
     
+    private var _isDriver: Bool?
+    
+    var isDriver: Bool? {
+        get {
+            return _isDriver
+        }
+        set {
+            _isDriver = newValue
+        }
+    }
+    
     func login(email: String, password: String, isDriver: Bool, onComplete: CompletionHandler?) {
         var userData: Dictionary<String, Any>?
         Auth.auth().signIn(withEmail: email, password: password) { (user, error) in
@@ -52,13 +63,11 @@ class AuthService {
                             
                         })
                     }
-                    print("did it get here")
                     self.handleFirebaseError(error: error! as NSError)
                 } else {
                     //never get here due to if let errorCode = AuthErrorCode section above. Error already exist
                 }
             } else {
-                print("auto logged in")
                 onComplete!(false, "")
                 
             }
