@@ -20,6 +20,7 @@ class AuthService {
     }
     
     private var _isDriver: Bool?
+    var delegate: Alertable?
     
     var isDriver: Bool? {
         get {
@@ -79,17 +80,16 @@ class AuthService {
         if let errorCode = AuthErrorCode(rawValue: error.code) {
             switch(errorCode) {
             case .invalidEmail:
-                print("Invalid email address")
+                self.delegate?.showAlert("Invalid email address")
                 break
             case .wrongPassword:
-                print("Invalid password")
+                self.delegate?.showAlert("Invalid Password")
                 break
             case .emailAlreadyInUse, .accountExistsWithDifferentCredential:
-                print("Could not create account, Email already in use")
+                self.delegate?.showAlert("Could not create account, Email already in use")
                 break
             default:
-                print("There was a problem authenticating. Try again.")
-                
+                self.delegate?.showAlert("There was a problem authenticating. Try again.")                
             }
             
         }

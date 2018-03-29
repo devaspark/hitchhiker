@@ -9,7 +9,7 @@
 import UIKit
 import Firebase
 
-class LoginVC: UIViewController, UITextFieldDelegate {
+class LoginVC: UIViewController, UITextFieldDelegate, Alertable {
 
     @IBOutlet weak var emailField: RoundedCornerTextField!
     @IBOutlet weak var passwordField: RoundedCornerTextField!
@@ -18,6 +18,7 @@ class LoginVC: UIViewController, UITextFieldDelegate {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        AuthService.instance.delegate = self
         emailField.delegate = self
         passwordField.delegate = self
         view.bindToKeyboard()
@@ -44,7 +45,6 @@ class LoginVC: UIViewController, UITextFieldDelegate {
                 if self.segmentedControl.selectedSegmentIndex == 0 {
                     AuthService.instance.login(email: email, password: password, isDriver: false, onComplete: { (isError, errorMsg) in
                         if(!isError){
-                            
                             self.dismiss(animated: true, completion: nil)
                         }
                     })

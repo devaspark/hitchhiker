@@ -8,7 +8,10 @@
 
 import UIKit
 
-protocol Alertable {}
+protocol Alertable {
+    
+    func showAlert(_ msg: String)
+}
 
 extension Alertable where Self: UIViewController {
     func showAlert(_ msg: String) {
