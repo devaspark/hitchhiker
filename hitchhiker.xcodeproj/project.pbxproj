@@ -27,6 +27,7 @@
 		B387647D205B8836006154DB /* GradientView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B387647C205B8836006154DB /* GradientView.swift */; };
 		B387647F205B8B3B006154DB /* RoundImageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B387647E205B8B3B006154DB /* RoundImageView.swift */; };
 		B389687B206B4B0300F2B8F5 /* DriverAnnotation.swift in Sources */ = {isa = PBXBuildFile; fileRef = B389687A206B4B0300F2B8F5 /* DriverAnnotation.swift */; };
+		B389687D206C858600F2B8F5 /* PassengerAnnotation.swift in Sources */ = {isa = PBXBuildFile; fileRef = B389687C206C858600F2B8F5 /* PassengerAnnotation.swift */; };
 		B398822120633A29002A0547 /* DataService.swift in Sources */ = {isa = PBXBuildFile; fileRef = B398822020633A29002A0547 /* DataService.swift */; };
 		B398822320633ADE002A0547 /* AuthService.swift in Sources */ = {isa = PBXBuildFile; fileRef = B398822220633ADE002A0547 /* AuthService.swift */; };
 /* End PBXBuildFile section */
@@ -56,6 +57,7 @@
 		B387647C205B8836006154DB /* GradientView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GradientView.swift; sourceTree = "<group>"; };
 		B387647E205B8B3B006154DB /* RoundImageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoundImageView.swift; sourceTree = "<group>"; };
 		B389687A206B4B0300F2B8F5 /* DriverAnnotation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DriverAnnotation.swift; sourceTree = "<group>"; };
+		B389687C206C858600F2B8F5 /* PassengerAnnotation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PassengerAnnotation.swift; sourceTree = "<group>"; };
 		B398822020633A29002A0547 /* DataService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataService.swift; sourceTree = "<group>"; };
 		B398822220633ADE002A0547 /* AuthService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthService.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -160,6 +162,7 @@
 				B334C527205E0810009B3EAE /* RoundedShadowButton.swift */,
 				B33F5699205F4BC200DD540E /* RoundedCornerTextField.swift */,
 				B389687A206B4B0300F2B8F5 /* DriverAnnotation.swift */,
+				B389687C206C858600F2B8F5 /* PassengerAnnotation.swift */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -343,6 +346,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				B334C52F205E3826009B3EAE /* CenterVCDelegate.swift in Sources */,
+				B389687D206C858600F2B8F5 /* PassengerAnnotation.swift in Sources */,
 				B334C528205E0810009B3EAE /* RoundedShadowButton.swift in Sources */,
 				B33F5698205F0C8900DD540E /* LoginVC.swift in Sources */,
 				B389687B206B4B0300F2B8F5 /* DriverAnnotation.swift in Sources */,
