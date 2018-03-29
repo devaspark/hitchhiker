@@ -25,6 +25,7 @@ class HomeVC: UIViewController {
     var regionRadius: CLLocationDistance = 1000
     var tableView = UITableView()
     var matchingItems = [MKMapItem]()
+    var route: MKRoute!
     var selectedItemPlacemark: MKPlacemark? = nil
     var currentUID: String?       //remember to store this again if the user logs out in the app
     
@@ -192,6 +193,13 @@ extension HomeVC: MKMapViewDelegate {
         centerMapBtn.fadeTo(alphaValue: 1.0, withDuration: 0.2)
     }
     
+    func mapView(_ mapView: MKMapView, rendererFor overlay: MKOverlay) -> MKOverlayRenderer {
+        let lineRenderer = MKPolylineRenderer(polyline: self.route.polyline)
+        lineRenderer.strokeColor = UIColor(red: 216/255, green: 71/255, blue: 30/255, alpha: 0.75)
+        lineRenderer.lineWidth = 3
+        return lineRenderer
+    }
+    
     func performSearch() {
         matchingItems.removeAll()
         let request = MKLocalSearchRequest()
@@ -209,6 +217,7 @@ extension HomeVC: MKMapViewDelegate {
                 for mapItem in searchResults!.mapItems {
                     self.matchingItems.append(mapItem as MKMapItem)
                     self.tableView.reloadData()
+                    self.shouldPresentLoadingView(false)
                 }
             }
             
@@ -227,6 +236,25 @@ extension HomeVC: MKMapViewDelegate {
         let annotation = MKPointAnnotation()
         annotation.coordinate = placemark.coordinate
         mapView.addAnnotation(annotation)
+    }
+    
+    func searchMapKitForResultsWithPolyLine(forMapItem destination: MKMapItem) {
+        let request = MKDirectionsRequest()
+        request.source = MKMapItem.forCurrentLocation()
+        request.destination = destination
+        request.transportType = MKDirectionsTransportType.automobile
+        let directions = MKDirections(request: request)
+        directions.calculate { (response, error) in
+            guard let response = response else {
+                print(error.debugDescription)
+                return
+            }
+            self.route = response.routes[0]
+            
+            self.mapView.add(self.route.polyline)
+            
+            self.shouldPresentLoadingView(false)
+        }
     }
 }
 
@@ -255,6 +283,7 @@ extension HomeVC: UITextFieldDelegate {
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
         if textField == destinationTextField {
             performSearch()
+            shouldPresentLoadingView(true)
             view.endEditing(true)
         }
         return true
@@ -274,6 +303,24 @@ extension HomeVC: UITextFieldDelegate {
     func textFieldShouldClear(_ textField: UITextField) -> Bool {
         matchingItems = []
         tableView.reloadData()
+        
+        DataService.instance.REF_USERS.document(currentUID!).updateData(["tripCoordinate" : FieldValue.delete()]) { (err) in
+            if let err = err {
+                print("Error updating document: \(err)")
+            } else {
+                print("trip coordinates successfully deleted")
+            }
+        }
+        mapView.removeOverlays(mapView.overlays)
+        for anno in mapView.annotations {
+            if let anno = anno as? MKPointAnnotation {
+                mapView.removeAnnotation(anno)
+            } else if anno.isKind(of: PassengerAnnotation.self) {
+                mapView.removeAnnotation(anno)
+            }
+        }
+        
+        
         centerMapOnUserLocation()
         return true
     }
@@ -314,6 +361,8 @@ extension HomeVC: UITableViewDelegate, UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        shouldPresentLoadingView(true)
+        
         let passengerCoordinate = manager?.location?.coordinate
         
         let passengerAnnotation = PassengerAnnotation(coordinate: passengerCoordinate!, key: currentUID!)
@@ -327,6 +376,8 @@ extension HomeVC: UITableViewDelegate, UITableViewDataSource {
         DataService.instance.REF_USERS.document(currentUID).setData(["tripCoordinate" : [selectedMapItem.placemark.coordinate.latitude, selectedMapItem.placemark.coordinate.longitude]], options: SetOptions.merge())
         
         dropPinFor(placemark: selectedMapItem.placemark)
+        
+        searchMapKitForResultsWithPolyLine(forMapItem: selectedMapItem)
         
         animateTableView(shouldShow: false)
     }
