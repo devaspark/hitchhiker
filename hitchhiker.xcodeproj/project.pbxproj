@@ -30,6 +30,9 @@
 		B389687D206C858600F2B8F5 /* PassengerAnnotation.swift in Sources */ = {isa = PBXBuildFile; fileRef = B389687C206C858600F2B8F5 /* PassengerAnnotation.swift */; };
 		B3897541206C99E30041B561 /* UIViewControllerExt.swift in Sources */ = {isa = PBXBuildFile; fileRef = B3897540206C99E30041B561 /* UIViewControllerExt.swift */; };
 		B3897543206CB4AA0041B561 /* Alertable.swift in Sources */ = {isa = PBXBuildFile; fileRef = B3897542206CB4AA0041B561 /* Alertable.swift */; };
+		B3897545206D6AAF0041B561 /* PickupVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = B3897544206D6AAF0041B561 /* PickupVC.swift */; };
+		B3897547206DC5050041B561 /* RoundMapView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B3897546206DC5050041B561 /* RoundMapView.swift */; };
+		B3897549206DEC400041B561 /* ToDoList.swift in Sources */ = {isa = PBXBuildFile; fileRef = B3897548206DEC400041B561 /* ToDoList.swift */; };
 		B398822120633A29002A0547 /* DataService.swift in Sources */ = {isa = PBXBuildFile; fileRef = B398822020633A29002A0547 /* DataService.swift */; };
 		B398822320633ADE002A0547 /* AuthService.swift in Sources */ = {isa = PBXBuildFile; fileRef = B398822220633ADE002A0547 /* AuthService.swift */; };
 /* End PBXBuildFile section */
@@ -62,6 +65,9 @@
 		B389687C206C858600F2B8F5 /* PassengerAnnotation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PassengerAnnotation.swift; sourceTree = "<group>"; };
 		B3897540206C99E30041B561 /* UIViewControllerExt.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIViewControllerExt.swift; sourceTree = "<group>"; };
 		B3897542206CB4AA0041B561 /* Alertable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Alertable.swift; sourceTree = "<group>"; };
+		B3897544206D6AAF0041B561 /* PickupVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PickupVC.swift; sourceTree = "<group>"; };
+		B3897546206DC5050041B561 /* RoundMapView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoundMapView.swift; sourceTree = "<group>"; };
+		B3897548206DEC400041B561 /* ToDoList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ToDoList.swift; sourceTree = "<group>"; };
 		B398822020633A29002A0547 /* DataService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataService.swift; sourceTree = "<group>"; };
 		B398822220633ADE002A0547 /* AuthService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthService.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -154,6 +160,7 @@
 				B387646E205B54E3006154DB /* LaunchScreen.storyboard */,
 				B3876477205B6C73006154DB /* GoogleService-Info.plist */,
 				B3876471205B54E3006154DB /* Info.plist */,
+				B3897548206DEC400041B561 /* ToDoList.swift */,
 			);
 			path = hitchhiker;
 			sourceTree = "<group>";
@@ -169,6 +176,7 @@
 				B33F5699205F4BC200DD540E /* RoundedCornerTextField.swift */,
 				B389687A206B4B0300F2B8F5 /* DriverAnnotation.swift */,
 				B389687C206C858600F2B8F5 /* PassengerAnnotation.swift */,
+				B3897546206DC5050041B561 /* RoundMapView.swift */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -180,6 +188,7 @@
 				B3876467205B54E3006154DB /* HomeVC.swift */,
 				B334C529205E3544009B3EAE /* LeftMenuBarVC.swift */,
 				B33F5697205F0C8900DD540E /* LoginVC.swift */,
+				B3897544206D6AAF0041B561 /* PickupVC.swift */,
 			);
 			path = Controller;
 			sourceTree = "<group>";
@@ -358,11 +367,14 @@
 				B389687B206B4B0300F2B8F5 /* DriverAnnotation.swift in Sources */,
 				B334C52A205E3544009B3EAE /* LeftMenuBarVC.swift in Sources */,
 				B34EB89F205CCB2E00330C52 /* CircleView.swift in Sources */,
+				B3897549206DEC400041B561 /* ToDoList.swift in Sources */,
 				B334C52C205E35A7009B3EAE /* ContainerVC.swift in Sources */,
 				B33F5696205EFE8000DD540E /* UIViewExt.swift in Sources */,
 				B3876468205B54E3006154DB /* HomeVC.swift in Sources */,
 				B387647F205B8B3B006154DB /* RoundImageView.swift in Sources */,
 				B398822120633A29002A0547 /* DataService.swift in Sources */,
+				B3897547206DC5050041B561 /* RoundMapView.swift in Sources */,
+				B3897545206D6AAF0041B561 /* PickupVC.swift in Sources */,
 				B34EB89D205CBEBF00330C52 /* RoundedShadowView.swift in Sources */,
 				B33F569A205F4BC200DD540E /* RoundedCornerTextField.swift in Sources */,
 				B3897543206CB4AA0041B561 /* Alertable.swift in Sources */,

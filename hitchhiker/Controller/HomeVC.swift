@@ -56,6 +56,27 @@ class HomeVC: UIViewController, Alertable {
         revealingSplashView.animationType = SplashAnimationType.heartBeat
         revealingSplashView.startAnimation()
         revealingSplashView.heartAttack = true
+        
+        LocationService.instance.observeTrips { (tripDict) in
+            if let tripDict = tripDict {
+                let pickupCoordinateArray = tripDict["pickupCoordinate"] as! NSArray
+                let tripKey = tripDict["passengerKey"] as! String
+                
+                //from listener query, accepted trip is already checked to be false
+                DataService.instance.driverIsAvailable(key: self.currentUID!, handler: { (available) in
+                    if let available = available {
+                        if available == true {
+                            let storyboard = UIStoryboard(name: "Main", bundle: Bundle.main)
+                            let pickupVC = storyboard.instantiateViewController(withIdentifier: "PickupVC") as? PickupVC
+                            pickupVC?.initData(coordinate: CLLocationCoordinate2D(latitude: pickupCoordinateArray[0] as! CLLocationDegrees, longitude: pickupCoordinateArray[1] as! CLLocationDegrees), passengerKey: tripKey)
+                            self.present(pickupVC!, animated: true, completion: nil)
+                        }
+            
+                    }
+                })
+                
+            }
+        }
     }
     
     func checkLocationAuthStatus() {
@@ -119,7 +140,12 @@ class HomeVC: UIViewController, Alertable {
     }
 
     @IBAction func actionBtnPressed(_ sender: Any) {
+        LocationService.instance.updateTripsWithCoordinatesUponRequest()
         actionBtn.animateButton(shouldLoad: true, withMessage: nil)
+        
+        self.view.endEditing(true)
+        destinationTextField.isUserInteractionEnabled = false
+        
     }
     
     @IBOutlet weak var menuBtnPressed: UIButton!

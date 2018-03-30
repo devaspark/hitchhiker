@@ -43,4 +43,23 @@ class DataService {
         }
     }
     
+    func driverIsAvailable(key: String, handler: @escaping (_ status: Bool?) -> Void) {
+        DataService.instance.REF_DRIVERS.document(key).getDocument { (document, error) in
+            if let document = document, document.exists {
+                let data = document.data()
+                if (data["isPickupModeEnabled"] as! Bool) && !(data["driverIsOnTrip"] as! Bool) {
+                    handler(true)
+                } else {
+                    handler(false)
+                }
+            } else {
+                print("error occurred, no driver found from UID")
+            }
+        }
+        
+        
+        
+    }
+    
 }
+

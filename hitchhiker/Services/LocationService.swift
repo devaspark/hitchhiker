@@ -43,4 +43,37 @@ class LocationService {
             }
         }
     }
+    
+    func observeTrips(handler: @escaping (_ coordinateDict: Dictionary<String, Any>?) -> Void) {
+        DataService.instance.REF_TRIPS.whereField("tripIsAccepted", isEqualTo: false).addSnapshotListener { (docSnapshot, error) in
+            guard let documents = docSnapshot else { return }
+            documents.documentChanges.forEach({ (diff) in
+                if (diff.type == .added) {
+                    //New Trip added
+                    let data = diff.document.data()
+                    handler(data)
+                }
+                if (diff.type == .modified) {
+                    //modified trip
+                    let data = diff.document.data()
+                    handler(data)
+                }
+                if (diff.type == .removed) {
+                    //removed trip
+                }
+            })
+        }
+    }
+    
+    func updateTripsWithCoordinatesUponRequest() {
+        guard let uid = Auth.auth().currentUser?.uid else { return }
+        let userRef = DataService.instance.REF_USERS.document(uid)
+        userRef.getDocument { (userDoc, error) in
+            let data = userDoc?.data()
+            let pickupArray = data!["coordinate"] as! NSArray
+            let destinationArray = data!["tripCoordinate"] as! NSArray
+            
+            DataService.instance.REF_TRIPS.document(uid).setData(["pickupCoordinate" : [pickupArray[0], pickupArray[1]], "destinationCoordinate" : [destinationArray[0], destinationArray[1]], "passengerKey" : uid, "tripIsAccepted": false], options: SetOptions.merge())
+        }
+    }
 }
