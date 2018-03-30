@@ -56,10 +56,6 @@ class DataService {
                 print("error occurred, no driver found from UID")
             }
         }
-        
-        
-        
     }
-    
 }
 

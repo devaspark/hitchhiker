@@ -76,4 +76,15 @@ class LocationService {
             DataService.instance.REF_TRIPS.document(uid).setData(["pickupCoordinate" : [pickupArray[0], pickupArray[1]], "destinationCoordinate" : [destinationArray[0], destinationArray[1]], "passengerKey" : uid, "tripIsAccepted": false], options: SetOptions.merge())
         }
     }
+    
+    func acceptTrip(withPassengerKey passengerKey: String, forDriverKey driverKey: String) {
+        DataService.instance.REF_TRIPS.document(passengerKey).setData(["driverKey" : driverKey, "tripIsAccepted": true], options: SetOptions.merge())
+        DataService.instance.REF_DRIVERS.document(driverKey).setData(["driverIsOnTrip" : true], options: SetOptions.merge())
+    }
+    
+    func cancelTrip(withPassengerKey passengerKey:String, forDriverKey driverkey: String) {
+        DataService.instance.REF_TRIPS.document(passengerKey).delete()
+        DataService.instance.REF_USERS.document(passengerKey).updateData(["tripCoordinate" : FieldValue.delete()])
+        DataService.instance.REF_DRIVERS.document(driverkey).setData(["driverIsOnTrip" : false], options: SetOptions.merge())
+    }
 }
