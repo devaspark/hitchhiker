@@ -19,6 +19,7 @@ class HomeVC: UIViewController, Alertable {
     @IBOutlet weak var centerMapBtn: UIButton!
     @IBOutlet weak var destinationTextField: UITextField!
     @IBOutlet weak var destinationCircle: CircleView!
+    @IBOutlet weak var cancelBtn: UIButton!
     
     var delegate: CenterVCDelegate?
     var manager: CLLocationManager?
@@ -167,6 +168,22 @@ class HomeVC: UIViewController, Alertable {
         self.view.endEditing(true)
         destinationTextField.isUserInteractionEnabled = false
         
+    }
+    
+    @IBAction func cancelBtnPressed(_ sender: Any) {
+        DataService.instance.driverIsOnTrip(driverKey: currentUID!) { (isOnTrip, driverKey, tripKey) in
+            if isOnTrip == true {
+                LocationService.instance.cancelTrip(withPassengerKey: tripKey!, forDriverKey: driverKey!)
+            }
+        }
+        
+        DataService.instance.passengerIsOnTrip(passengerKey: currentUID!) { (isOnTrip, driverKey, tripKey) in
+            if isOnTrip == true {
+                LocationService.instance.cancelTrip(withPassengerKey: self.currentUID!, forDriverKey: driverKey!)
+            } else {
+                LocationService.instance.cancelTrip(withPassengerKey: self.currentUID!, forDriverKey: nil)
+            }
+        }
     }
     
     @IBOutlet weak var menuBtnPressed: UIButton!

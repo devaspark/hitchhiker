@@ -82,9 +82,11 @@ class LocationService {
         DataService.instance.REF_DRIVERS.document(driverKey).setData(["driverIsOnTrip" : true], options: SetOptions.merge())
     }
     
-    func cancelTrip(withPassengerKey passengerKey:String, forDriverKey driverkey: String) {
+    func cancelTrip(withPassengerKey passengerKey:String, forDriverKey driverkey: String?) {
         DataService.instance.REF_TRIPS.document(passengerKey).delete()
         DataService.instance.REF_USERS.document(passengerKey).updateData(["tripCoordinate" : FieldValue.delete()])
-        DataService.instance.REF_DRIVERS.document(driverkey).setData(["driverIsOnTrip" : false], options: SetOptions.merge())
+        if driverkey != nil {
+            DataService.instance.REF_DRIVERS.document(driverkey!).setData(["driverIsOnTrip" : false], options: SetOptions.merge())
+        }
     }
 }
