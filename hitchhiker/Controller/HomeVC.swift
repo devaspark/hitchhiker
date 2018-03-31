@@ -79,6 +79,27 @@ class HomeVC: UIViewController, Alertable {
         }
     }
     
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        
+        DataService.instance.driverIsAvailable(key: self.currentUID!) { (status) in
+            if status == false {
+                DataService.instance.REF_TRIPS.whereField("driverKey", isEqualTo: self.currentUID!).getDocuments(completion: { (querySnap, error) in
+                    if let documents = querySnap?.documents {
+                        let document = documents.first
+                        let tripData = document?.data()
+                        let pickupCoordinateArray = tripData!["pickupCoordinate"] as! NSArray
+                        let pickupCoordinate = CLLocationCoordinate2D(latitude: pickupCoordinateArray[0] as! CLLocationDegrees, longitude: pickupCoordinateArray[1] as! CLLocationDegrees)
+                        let pickupPlacemark = MKPlacemark(coordinate: pickupCoordinate)
+                        
+                        self.dropPinFor(placemark: pickupPlacemark)
+                        self.searchMapKitForResultsWithPolyLine(forMapItem: MKMapItem(placemark: pickupPlacemark))
+                    }
+                })
+            }
+        }
+    }
+    
     func checkLocationAuthStatus() {
         if CLLocationManager.authorizationStatus() == .authorizedAlways || CLLocationManager.authorizationStatus() == .authorizedWhenInUse {
             manager?.startUpdatingLocation()
@@ -155,17 +176,28 @@ class HomeVC: UIViewController, Alertable {
     }
     
     @IBAction func centerMapBtnPressed(_ sender: Any) {
-        DataService.instance.REF_USERS.document(currentUID!).getDocument { (docSnapshot, error) in
-            let data = docSnapshot?.data()
-            if data!["tripCoordinate"] != nil {
-                self.zoom(toFitAnnotationsFromMapView: self.mapView)
-                self.centerMapBtn.fadeTo(alphaValue: 0.0, withDuration: 0.2)
-            } else {
-                self.centerMapOnUserLocation()
-                self.centerMapBtn.fadeTo(alphaValue: 0.0, withDuration: 0.2)
+        
+        if AuthService.instance.isDriver == true {
+            DataService.instance.REF_DRIVERS.document(currentUID!).getDocument { (docSnapshot, error) in
+                if (docSnapshot?.exists)! {
+                    self.centerMapOnUserLocation()
+                    self.centerMapBtn.fadeTo(alphaValue: 0.0, withDuration: 0.2)
+                }
+            }
+        } else {
+            DataService.instance.REF_USERS.document(currentUID!).getDocument { (docSnapshot, error) in
+                if (docSnapshot?.exists)! {
+                    let data = docSnapshot?.data()
+                    if data!["tripCoordinate"] != nil {
+                        self.zoom(toFitAnnotationsFromMapView: self.mapView)
+                        self.centerMapBtn.fadeTo(alphaValue: 0.0, withDuration: 0.2)
+                    } else {
+                        self.centerMapOnUserLocation()
+                        self.centerMapBtn.fadeTo(alphaValue: 0.0, withDuration: 0.2)
+                    }
+                }
             }
         }
-
     }
 }
 
@@ -232,6 +264,7 @@ extension HomeVC: MKMapViewDelegate {
         let lineRenderer = MKPolylineRenderer(polyline: self.route.polyline)
         lineRenderer.strokeColor = UIColor(red: 216/255, green: 71/255, blue: 30/255, alpha: 0.75)
         lineRenderer.lineWidth = 3
+        shouldPresentLoadingView(false)
         zoom(toFitAnnotationsFromMapView: self.mapView)
         return lineRenderer
     }
@@ -289,7 +322,8 @@ extension HomeVC: MKMapViewDelegate {
             
             self.mapView.add(self.route.polyline)
             
-            self.shouldPresentLoadingView(false)
+            let delegate = AppDelegate.getAppDelegate()
+            delegate.window?.rootViewController?.self.shouldPresentLoadingView(false)
         }
     }
     

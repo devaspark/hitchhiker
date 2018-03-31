@@ -57,5 +57,65 @@ class DataService {
             }
         }
     }
+    
+    func driverIsOnTrip(driverKey: String, handler: @escaping (_ status: Bool?, _ driverKey: String?, _ tripKey: String?) -> Void) {
+        DataService.instance.REF_DRIVERS.document(driverKey).addSnapshotListener { (driverTripSnapshot, error) in
+            if let driverTripSnapshot = driverTripSnapshot, driverTripSnapshot.exists {
+                let data = driverTripSnapshot.data()
+                if data["driverIsOnTrip"] as! Bool == true {
+                    DataService.instance.REF_TRIPS.whereField("driverKey", isEqualTo: driverKey).getDocuments(completion: { (tripQuery, error) in
+                        if !(tripQuery?.isEmpty)! {
+                            let tripDocs = tripQuery?.documents
+                            if let tripDocs = tripDocs {
+                                if tripDocs.count > 1 {
+                                    print("Error! driver is registered to multiple trips.")
+                                    //error occurred, driver is registered to multiple trips
+                                    
+                                    let tripDocument = tripDocs.first
+                                    handler(true, driverKey, tripDocument?.documentID)
+                                } else {
+                                    let tripDocument = tripDocs.first  //only one element expected so we just take the first one.
+                                    handler(true, driverKey, tripDocument?.documentID)
+                                }
+                            } else {
+                                //nothing in tripdocs
+                                return
+                            }
+                        } else {
+                            //tripquery empty, did not find trip with the same driver
+                        }
+                    })
+                } else {
+                    //driverIsOnTrip is false
+                    handler(false, nil, nil)
+                }
+            }
+        }
+    }
+    
+    func passengerIsOnTrip(passengerKey: String, handler: @escaping (_ status: Bool?, _ driverKey: String?, _ tripKey: String?) -> Void) {
+        DataService.instance.REF_TRIPS.document(passengerKey).getDocument { (tripDocument, error) in
+            if let tripData = tripDocument?.data(), (tripDocument?.exists)! {
+                if tripData["tripIsAccepted"] as? Bool == true {
+                    let driverKey = tripData["driverKey"] as? String
+                    handler(true, driverKey, tripDocument?.documentID)
+                } else {
+                    handler(false, nil, nil)
+                }
+            }
+        }
+    }
+    
+    func userIsDriver(userKey: String, handler: @escaping (_ status: Bool) -> Void) {
+        DataService.instance.REF_DRIVERS.document(userKey).getDocument { (driverDocument, error) in
+            if let driverDocument = driverDocument, driverDocument.exists {
+                handler(true)
+            } else {
+                handler(false)
+            }
+        }
+    
+    
+    }
 }
 
