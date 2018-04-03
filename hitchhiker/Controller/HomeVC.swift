@@ -99,6 +99,50 @@ class HomeVC: UIViewController, Alertable {
                 })
             }
         }
+        
+        DataService.instance.REF_TRIPS.addSnapshotListener { (querySnapshot, error) in
+            if let querySnapshot = querySnapshot {
+                let docChanges = querySnapshot.documentChanges
+                for change in docChanges {
+                    switch (change.type) {
+                    case .added:
+                        print("this was added \(change.document.documentID)")
+                        break
+                    case .modified:
+                        print("this was modified \(change.document.documentID)")
+                        break
+                    case .removed:
+                        let data = change.document.data()
+                        if data["driverKey"] != nil {
+                            self.setDriverTripStatus(driverKey: data["driverKey"] as! String, status: false)
+                        }
+                        self.cleanUpLocation()
+                    }
+                }
+                
+            }
+        }
+    }
+    
+    func setDriverTripStatus(driverKey: String, status: Bool) {
+        DataService.instance.REF_DRIVERS.document(driverKey).setData(["driverIsOnTrip": status], options: SetOptions.merge())
+    }
+    
+    func cleanUpLocation() {
+        DataService.instance.userIsDriver(userKey: self.currentUID!) { (isDriver) in
+            if isDriver == true {
+                // Remove overlays and annotations / hide request ride btn and cancel btn
+            } else {
+                self.cancelBtn.fadeTo(alphaValue: 0.0, withDuration: 0.2)
+                self.actionBtn.animateButton(shouldLoad: false, withMessage: "REQUEST RIDE")
+                
+                self.destinationTextField.isUserInteractionEnabled = true
+                self.destinationTextField.text = ""
+                
+                // Remove all map annotations and overlays
+                self.centerMapOnUserLocation()
+            }
+        }
     }
     
     func checkLocationAuthStatus() {
