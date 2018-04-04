@@ -95,10 +95,11 @@ class DataService {
     
     func passengerIsOnTrip(passengerKey: String, handler: @escaping (_ status: Bool?, _ driverKey: String?, _ tripKey: String?) -> Void) {
         DataService.instance.REF_TRIPS.document(passengerKey).getDocument { (tripDocument, error) in
-            if let tripData = tripDocument?.data(), (tripDocument?.exists)! {
+            if let tripDocument = tripDocument, tripDocument.exists {
+                let tripData = tripDocument.data()
                 if tripData["tripIsAccepted"] as? Bool == true {
                     let driverKey = tripData["driverKey"] as? String
-                    handler(true, driverKey, tripDocument?.documentID)
+                    handler(true, driverKey, tripDocument.documentID)
                 } else {
                     handler(false, nil, nil)
                 }

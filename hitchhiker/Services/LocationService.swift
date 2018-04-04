@@ -19,6 +19,7 @@ class LocationService {
         let userRef = DataService.instance.REF_USERS.document(uid)
         userRef.getDocument { (docSnapshot, error) in
             if error == nil {
+                print("does it get here, updating coordinates") 
                 DataService.instance.REF_USERS.document(uid).setData(["coordinate": [coordinate.latitude, coordinate.longitude]], options: SetOptions.merge())
             } else {
                 print("Error occurred fetching user data for location update")

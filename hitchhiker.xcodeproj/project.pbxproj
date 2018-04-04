@@ -33,6 +33,7 @@
 		B3897545206D6AAF0041B561 /* PickupVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = B3897544206D6AAF0041B561 /* PickupVC.swift */; };
 		B3897547206DC5050041B561 /* RoundMapView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B3897546206DC5050041B561 /* RoundMapView.swift */; };
 		B3897549206DEC400041B561 /* ToDoList.swift in Sources */ = {isa = PBXBuildFile; fileRef = B3897548206DEC400041B561 /* ToDoList.swift */; };
+		B389756D2073FC780041B561 /* HomeVCDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = B389756C2073FC780041B561 /* HomeVCDelegate.swift */; };
 		B398822120633A29002A0547 /* DataService.swift in Sources */ = {isa = PBXBuildFile; fileRef = B398822020633A29002A0547 /* DataService.swift */; };
 		B398822320633ADE002A0547 /* AuthService.swift in Sources */ = {isa = PBXBuildFile; fileRef = B398822220633ADE002A0547 /* AuthService.swift */; };
 /* End PBXBuildFile section */
@@ -68,6 +69,7 @@
 		B3897544206D6AAF0041B561 /* PickupVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PickupVC.swift; sourceTree = "<group>"; };
 		B3897546206DC5050041B561 /* RoundMapView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoundMapView.swift; sourceTree = "<group>"; };
 		B3897548206DEC400041B561 /* ToDoList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ToDoList.swift; sourceTree = "<group>"; };
+		B389756C2073FC780041B561 /* HomeVCDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeVCDelegate.swift; sourceTree = "<group>"; };
 		B398822020633A29002A0547 /* DataService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataService.swift; sourceTree = "<group>"; };
 		B398822220633ADE002A0547 /* AuthService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthService.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -106,6 +108,7 @@
 			children = (
 				B334C52E205E3826009B3EAE /* CenterVCDelegate.swift */,
 				B3897542206CB4AA0041B561 /* Alertable.swift */,
+				B389756C2073FC780041B561 /* HomeVCDelegate.swift */,
 			);
 			path = Protocols;
 			sourceTree = "<group>";
@@ -380,6 +383,7 @@
 				B3897543206CB4AA0041B561 /* Alertable.swift in Sources */,
 				B3897541206C99E30041B561 /* UIViewControllerExt.swift in Sources */,
 				B398822320633ADE002A0547 /* AuthService.swift in Sources */,
+				B389756D2073FC780041B561 /* HomeVCDelegate.swift in Sources */,
 				B3876466205B54E3006154DB /* AppDelegate.swift in Sources */,
 				B34D4BC8206A26060058BBD0 /* LocationService.swift in Sources */,
 				B387647D205B8836006154DB /* GradientView.swift in Sources */,

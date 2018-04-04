@@ -19,6 +19,7 @@ class PickupVC: UIViewController {
     var locationPlacemark: MKPlacemark!
     var pickupCoordinate: CLLocationCoordinate2D!
     var passengerKey: String!
+    var homeVCDelegate: HomeVCDelegate?
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -36,6 +37,7 @@ class PickupVC: UIViewController {
                 }
             } else {
                 self.dismiss(animated: true, completion: nil)
+                self.homeVCDelegate?.centerMapOnUserLocation()
             }
         }
     }

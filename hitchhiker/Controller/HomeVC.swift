@@ -12,7 +12,7 @@ import MapKit
 import CoreLocation
 import RevealingSplashView
 
-class HomeVC: UIViewController, Alertable {
+class HomeVC: UIViewController, Alertable, HomeVCDelegate {
 
     @IBOutlet weak var mapView: MKMapView!
     @IBOutlet weak var actionBtn: RoundedShadowButton!
@@ -45,12 +45,19 @@ class HomeVC: UIViewController, Alertable {
         mapView.delegate = self
         destinationTextField.delegate = self
         
+        
         centerMapOnUserLocation()
         
         
         DataService.instance.REF_DRIVERS.addSnapshotListener { (querySnapshot, error) in
             self.loadDriverAnnoationsFromFB()
             self.removeDriverAnnoationsFromFB()
+            
+            DataService.instance.passengerIsOnTrip(passengerKey: self.currentUID!, handler: { (isOnTrip, driverKey, tripKey) in
+                if isOnTrip == true {
+                    self.zoom(toFitAnnotationsFromMapView: self.mapView, forActiveTripWithDriver: true, withKey: driverKey)
+                }
+            })
         }
         
         self.view.addSubview(revealingSplashView)
@@ -70,6 +77,7 @@ class HomeVC: UIViewController, Alertable {
                             let storyboard = UIStoryboard(name: "Main", bundle: Bundle.main)
                             let pickupVC = storyboard.instantiateViewController(withIdentifier: "PickupVC") as? PickupVC
                             pickupVC?.initData(coordinate: CLLocationCoordinate2D(latitude: pickupCoordinateArray[0] as! CLLocationDegrees, longitude: pickupCoordinateArray[1] as! CLLocationDegrees), passengerKey: tripKey)
+                            pickupVC?.homeVCDelegate = self
                             self.present(pickupVC!, animated: true, completion: nil)
                         }
             
@@ -82,7 +90,7 @@ class HomeVC: UIViewController, Alertable {
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        
+        currentUID = Auth.auth().currentUser?.uid
         DataService.instance.driverIsAvailable(key: self.currentUID!) { (status) in
             if status == false {
                 DataService.instance.REF_TRIPS.whereField("driverKey", isEqualTo: self.currentUID!).getDocuments(completion: { (querySnap, error) in
@@ -94,11 +102,13 @@ class HomeVC: UIViewController, Alertable {
                         let pickupPlacemark = MKPlacemark(coordinate: pickupCoordinate)
                         
                         self.dropPinFor(placemark: pickupPlacemark)
-                        self.searchMapKitForResultsWithPolyLine(forMapItem: MKMapItem(placemark: pickupPlacemark))
+                        self.searchMapKitForResultsWithPolyLine(forOriginMapItem: nil, withDestinationMapItem: MKMapItem(placemark: pickupPlacemark))
                     }
                 })
             }
         }
+        
+        connectUserAndDriverForTrip()
         
         DataService.instance.REF_TRIPS.addSnapshotListener { (querySnapshot, error) in
             if let querySnapshot = querySnapshot {
@@ -127,23 +137,7 @@ class HomeVC: UIViewController, Alertable {
     func setDriverTripStatus(driverKey: String, status: Bool) {
         DataService.instance.REF_DRIVERS.document(driverKey).setData(["driverIsOnTrip": status], options: SetOptions.merge())
     }
-    
-    func cleanUpLocation() {
-        DataService.instance.userIsDriver(userKey: self.currentUID!) { (isDriver) in
-            if isDriver == true {
-                // Remove overlays and annotations / hide request ride btn and cancel btn
-            } else {
-                self.cancelBtn.fadeTo(alphaValue: 0.0, withDuration: 0.2)
-                self.actionBtn.animateButton(shouldLoad: false, withMessage: "REQUEST RIDE")
-                
-                self.destinationTextField.isUserInteractionEnabled = true
-                self.destinationTextField.text = ""
-                
-                // Remove all map annotations and overlays
-                self.centerMapOnUserLocation()
-            }
-        }
-    }
+
     
     func checkLocationAuthStatus() {
         if CLLocationManager.authorizationStatus() == .authorizedAlways || CLLocationManager.authorizationStatus() == .authorizedWhenInUse {
@@ -182,6 +176,48 @@ class HomeVC: UIViewController, Alertable {
         }
     }
     
+    func connectUserAndDriverForTrip() {
+        DataService.instance.userIsDriver(userKey: currentUID!) { (status) in
+            if status == false {
+                DataService.instance.REF_TRIPS.document(self.currentUID!).addSnapshotListener({ (docSnapshot, error) in
+                    if let docSnapshot = docSnapshot, docSnapshot.exists {
+                        let tripData = docSnapshot.data()
+                    
+                        if tripData["tripIsAccepted"] as? Bool == true {
+                            self.removeOverlaysAndAnnotations(forDrivers: true, forPassengers: true)
+                            
+                            let driverID = tripData["driverKey"] as! String
+                            let pickupCoordinateArray = tripData["pickupCoordinate"] as! NSArray
+                            let pickupCoordinate = CLLocationCoordinate2D(latitude: pickupCoordinateArray[0] as! CLLocationDegrees, longitude: pickupCoordinateArray[1] as! CLLocationDegrees)
+                            let pickupPlacemark = MKPlacemark(coordinate: pickupCoordinate)
+                            let pickupMapItem = MKMapItem(placemark: pickupPlacemark)
+                            
+                            DataService.instance.REF_DRIVERS.document(driverID).getDocument(completion: { (docSnapshot, error) in
+                                if let docSnapshot = docSnapshot {
+                                    let data = docSnapshot.data()
+                                    let driverCoordinateArray = data["coordinate"] as! NSArray
+                                    let driverCoordinate = CLLocationCoordinate2D(latitude: driverCoordinateArray[0] as! CLLocationDegrees, longitude: driverCoordinateArray[1] as! CLLocationDegrees)
+                                    let driverPlacemark = MKPlacemark(coordinate: driverCoordinate)
+                                    let driverMapItem = MKMapItem(placemark: driverPlacemark)
+                                    
+                                    let passengerAnnotation = PassengerAnnotation(coordinate: pickupCoordinate, key: self.currentUID!)
+                                    let driverAnnotation = DriverAnnotation(coordinate: driverCoordinate, withKey: driverID)
+                                    
+                                    self.mapView.addAnnotations([passengerAnnotation, driverAnnotation])
+                                    self.searchMapKitForResultsWithPolyLine(forOriginMapItem: driverMapItem, withDestinationMapItem: pickupMapItem)
+                                    self.actionBtn.animateButton(shouldLoad: false, withMessage: "DRIVER COMING")
+                                    self.actionBtn.isUserInteractionEnabled = false
+                                    
+                                }
+                            })
+                            
+                        }
+                    }
+                })
+            }
+        }
+    }
+    
     func removeDriverAnnoationsFromFB() {
         DataService.instance.REF_DRIVERS.whereField("isPickupModeEnabled", isEqualTo: false).whereField("userIsDriver", isEqualTo: true).getDocuments { (querySnapshot, error) in
             if let drivers = querySnapshot?.documents{
@@ -208,7 +244,7 @@ class HomeVC: UIViewController, Alertable {
     @IBAction func actionBtnPressed(_ sender: Any) {
         LocationService.instance.updateTripsWithCoordinatesUponRequest()
         actionBtn.animateButton(shouldLoad: true, withMessage: nil)
-        
+        cancelBtn.fadeTo(alphaValue: 1.0, withDuration: 0.2)
         self.view.endEditing(true)
         destinationTextField.isUserInteractionEnabled = false
         
@@ -228,6 +264,8 @@ class HomeVC: UIViewController, Alertable {
                 LocationService.instance.cancelTrip(withPassengerKey: self.currentUID!, forDriverKey: nil)
             }
         }
+        
+        self.actionBtn.isUserInteractionEnabled = true
     }
     
     @IBOutlet weak var menuBtnPressed: UIButton!
@@ -250,13 +288,31 @@ class HomeVC: UIViewController, Alertable {
                 if (docSnapshot?.exists)! {
                     let data = docSnapshot?.data()
                     if data!["tripCoordinate"] != nil {
-                        self.zoom(toFitAnnotationsFromMapView: self.mapView)
+                        self.zoom(toFitAnnotationsFromMapView: self.mapView, forActiveTripWithDriver: false, withKey: nil)
                         self.centerMapBtn.fadeTo(alphaValue: 0.0, withDuration: 0.2)
                     } else {
                         self.centerMapOnUserLocation()
                         self.centerMapBtn.fadeTo(alphaValue: 0.0, withDuration: 0.2)
                     }
                 }
+            }
+        }
+    }
+    
+    
+    func cleanUpLocation() {
+        DataService.instance.userIsDriver(userKey: self.currentUID!) { (isDriver) in
+            if isDriver == true {
+                self.removeOverlaysAndAnnotations(forDrivers: false, forPassengers: true)
+            } else {
+                self.cancelBtn.fadeTo(alphaValue: 0.0, withDuration: 0.2)
+                self.actionBtn.animateButton(shouldLoad: false, withMessage: "REQUEST RIDE")
+                
+                self.destinationTextField.isUserInteractionEnabled = true
+                self.destinationTextField.text = ""
+                
+                self.removeOverlaysAndAnnotations(forDrivers: false, forPassengers: true)
+                self.centerMapOnUserLocation()
             }
         }
     }
@@ -277,15 +333,28 @@ extension HomeVC: MKMapViewDelegate {
     func mapView(_ mapView: MKMapView, didUpdate userLocation: MKUserLocation) {
         if (Auth.auth().currentUser != nil) {
             //Todo: detect which type of user is here, need to separate out user and driver location
-            if let userIsDriver = AuthService.instance.isDriver {
-                if userIsDriver == true {
+            
+            DataService.instance.userIsDriver(userKey: currentUID!, handler: { (isADriver) in
+                if isADriver == true {
                     LocationService.instance.updateDriverLocation(withCoordinate: userLocation.coordinate)
-                }
-                
-                if userIsDriver == false {
+                    DataService.instance.driverIsOnTrip(driverKey: self.currentUID!, handler: { (isOnTrip, driverKey, tripKey) in
+                        if isOnTrip == true {
+                            self.zoom(toFitAnnotationsFromMapView: self.mapView, forActiveTripWithDriver: true, withKey: driverKey)
+                        } else {
+                            self.centerMapOnUserLocation()
+                        }
+                    })
+                } else {
                     LocationService.instance.updateUserLocation(withCoordinate: userLocation.coordinate)
+                    /*DataService.instance.passengerIsOnTrip(passengerKey: self.currentUID!, handler: { (isOnTrip, driverKey, tripKey) in
+                        if isOnTrip == true {
+                            self.zoom(toFitAnnotationsFromMapView: self.mapView, forActiveTripWithDriver: true, withKey: driverKey)
+                        } else {
+                            self.centerMapOnUserLocation()
+                        }
+                    })*/
                 }
-            }
+            })
         }
     }
     
@@ -326,7 +395,7 @@ extension HomeVC: MKMapViewDelegate {
         lineRenderer.strokeColor = UIColor(red: 216/255, green: 71/255, blue: 30/255, alpha: 0.75)
         lineRenderer.lineWidth = 3
         shouldPresentLoadingView(false)
-        zoom(toFitAnnotationsFromMapView: self.mapView)
+        zoom(toFitAnnotationsFromMapView: self.mapView, forActiveTripWithDriver: false, withKey: nil)
         return lineRenderer
     }
     
@@ -368,10 +437,14 @@ extension HomeVC: MKMapViewDelegate {
         mapView.addAnnotation(annotation)
     }
     
-    func searchMapKitForResultsWithPolyLine(forMapItem destination: MKMapItem) {
+    func searchMapKitForResultsWithPolyLine(forOriginMapItem originMapItem: MKMapItem?, withDestinationMapItem destinationMapItem: MKMapItem) {
         let request = MKDirectionsRequest()
-        request.source = MKMapItem.forCurrentLocation()
-        request.destination = destination
+        if originMapItem == nil {
+            request.source = MKMapItem.forCurrentLocation()
+        } else {
+            request.source = originMapItem
+        }
+        request.destination = destinationMapItem
         request.transportType = MKDirectionsTransportType.automobile
         let directions = MKDirections(request: request)
         directions.calculate { (response, error) in
@@ -381,20 +454,41 @@ extension HomeVC: MKMapViewDelegate {
             }
             self.route = response.routes[0]
             
-            self.mapView.add(self.route.polyline)
+            if self.mapView.overlays.count == 0 {
+                self.mapView.add(self.route.polyline)
+            }
             
             let delegate = AppDelegate.getAppDelegate()
             delegate.window?.rootViewController?.self.shouldPresentLoadingView(false)
         }
     }
     
-    func zoom(toFitAnnotationsFromMapView mapView: MKMapView) {
+    func zoom(toFitAnnotationsFromMapView mapView: MKMapView, forActiveTripWithDriver: Bool, withKey key: String?) {
         if mapView.annotations.count == 0 {
             return
         }
         
         var topLeftCoordinate = CLLocationCoordinate2D(latitude: -90, longitude: 180)
         var bottomRightCoordinate = CLLocationCoordinate2D(latitude: 90, longitude: -180)
+        
+        if forActiveTripWithDriver {
+            for annotation in mapView.annotations {
+                if let annotation = annotation as? DriverAnnotation {
+                    if annotation.key == key {
+                        topLeftCoordinate.longitude = fmin(topLeftCoordinate.longitude, annotation.coordinate.longitude)
+                        topLeftCoordinate.latitude = fmax(topLeftCoordinate.latitude, annotation.coordinate.latitude)
+                        bottomRightCoordinate.longitude = fmax(bottomRightCoordinate.longitude, annotation.coordinate.longitude)
+                        bottomRightCoordinate.latitude = fmin(bottomRightCoordinate.latitude, annotation.coordinate.latitude)
+                    }
+                } else {
+                    topLeftCoordinate.longitude = fmin(topLeftCoordinate.longitude, annotation.coordinate.longitude)
+                    topLeftCoordinate.latitude = fmax(topLeftCoordinate.latitude, annotation.coordinate.latitude)
+                    bottomRightCoordinate.longitude = fmax(bottomRightCoordinate.longitude, annotation.coordinate.longitude)
+                    bottomRightCoordinate.latitude = fmin(bottomRightCoordinate.latitude, annotation.coordinate.latitude)
+                }
+            }
+        }
+        
         
         for annotation in mapView.annotations where !annotation.isKind(of: DriverAnnotation.self) {
             topLeftCoordinate.longitude = fmin(topLeftCoordinate.longitude, annotation.coordinate.longitude)
@@ -407,6 +501,32 @@ extension HomeVC: MKMapViewDelegate {
         
         region = mapView.regionThatFits(region)
         mapView.setRegion(region, animated: true)
+    }
+    
+    func removeOverlaysAndAnnotations(forDrivers: Bool?, forPassengers: Bool?) {
+        for annotation in mapView.annotations {
+            if let annotation = annotation as? MKPointAnnotation {
+                mapView.removeAnnotation(annotation)
+            }
+            
+            if forPassengers! {
+                if let annotation = annotation as? PassengerAnnotation {
+                    mapView.removeAnnotation(annotation)
+                }
+            }
+            
+            if forDrivers! {
+                if let annotation = annotation as? DriverAnnotation {
+                    mapView.removeAnnotation(annotation)
+                }
+            }
+        }
+        
+        for overlay in mapView.overlays {
+            if overlay is MKPolyline {
+                mapView.remove(overlay)
+            }
+        }
     }
 }
 
@@ -531,7 +651,7 @@ extension HomeVC: UITableViewDelegate, UITableViewDataSource {
         
         dropPinFor(placemark: selectedMapItem.placemark)
         
-        searchMapKitForResultsWithPolyLine(forMapItem: selectedMapItem)
+        searchMapKitForResultsWithPolyLine(forOriginMapItem: nil, withDestinationMapItem: selectedMapItem)
         
         animateTableView(shouldShow: false)
     }
