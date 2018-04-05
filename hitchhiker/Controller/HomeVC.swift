@@ -92,6 +92,9 @@ class HomeVC: UIViewController, Alertable, HomeVCDelegate {
         super.viewWillAppear(animated)
         currentUID = Auth.auth().currentUser?.uid
         DataService.instance.driverIsAvailable(key: self.currentUID!) { (status) in
+            if status == nil {
+                print("no driver found")
+            }
             if status == false {
                 DataService.instance.REF_TRIPS.whereField("driverKey", isEqualTo: self.currentUID!).getDocuments(completion: { (querySnap, error) in
                     if let documents = querySnap?.documents {
@@ -245,6 +248,7 @@ class HomeVC: UIViewController, Alertable, HomeVCDelegate {
         LocationService.instance.updateTripsWithCoordinatesUponRequest()
         actionBtn.animateButton(shouldLoad: true, withMessage: nil)
         cancelBtn.fadeTo(alphaValue: 1.0, withDuration: 0.2)
+        cancelBtn.isUserInteractionEnabled = true
         self.view.endEditing(true)
         destinationTextField.isUserInteractionEnabled = false
         
@@ -265,6 +269,8 @@ class HomeVC: UIViewController, Alertable, HomeVCDelegate {
             }
         }
         
+        cancelBtn.fadeTo(alphaValue: 0.0, withDuration: 0.2)
+        cancelBtn.isUserInteractionEnabled = false
         self.actionBtn.isUserInteractionEnabled = true
     }
     
@@ -306,6 +312,7 @@ class HomeVC: UIViewController, Alertable, HomeVCDelegate {
                 self.removeOverlaysAndAnnotations(forDrivers: false, forPassengers: true)
             } else {
                 self.cancelBtn.fadeTo(alphaValue: 0.0, withDuration: 0.2)
+                self.cancelBtn.isUserInteractionEnabled = false
                 self.actionBtn.animateButton(shouldLoad: false, withMessage: "REQUEST RIDE")
                 
                 self.destinationTextField.isUserInteractionEnabled = true
@@ -395,7 +402,6 @@ extension HomeVC: MKMapViewDelegate {
         lineRenderer.strokeColor = UIColor(red: 216/255, green: 71/255, blue: 30/255, alpha: 0.75)
         lineRenderer.lineWidth = 3
         shouldPresentLoadingView(false)
-        zoom(toFitAnnotationsFromMapView: self.mapView, forActiveTripWithDriver: false, withKey: nil)
         return lineRenderer
     }
     
@@ -457,6 +463,8 @@ extension HomeVC: MKMapViewDelegate {
             if self.mapView.overlays.count == 0 {
                 self.mapView.add(self.route.polyline)
             }
+            
+            self.zoom(toFitAnnotationsFromMapView: self.mapView, forActiveTripWithDriver: false, withKey: nil)
             
             let delegate = AppDelegate.getAppDelegate()
             delegate.window?.rootViewController?.self.shouldPresentLoadingView(false)

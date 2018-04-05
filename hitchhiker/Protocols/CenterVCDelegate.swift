@@ -11,6 +11,5 @@ import UIKit
 protocol CenterVCDelegate {
     func toggleLeftMenu()
     func addLeftMenuViewController()
-    func animateLeftMenu(shouldExpand: Bool)
-    
+    func animateLeftMenu(shouldExpand: Bool)    
 }

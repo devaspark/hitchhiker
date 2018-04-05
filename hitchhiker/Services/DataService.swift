@@ -89,6 +89,9 @@ class DataService {
                     //driverIsOnTrip is false
                     handler(false, nil, nil)
                 }
+            } else {
+                //no driver found
+                handler(nil, nil, nil)
             }
         }
     }
