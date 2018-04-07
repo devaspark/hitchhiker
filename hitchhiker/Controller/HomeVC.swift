@@ -18,6 +18,14 @@ enum AnnotationType {
     case driver
 }
 
+enum ButtonAction {
+    case requestRide
+    case getDirectionsToPassenger
+    case getDirectionsToDestination
+    case startTrip
+    case endTrip
+}
+
 class HomeVC: UIViewController, Alertable, HomeVCDelegate {
 
     @IBOutlet weak var mapView: MKMapView!
@@ -35,6 +43,7 @@ class HomeVC: UIViewController, Alertable, HomeVCDelegate {
     var route: MKRoute!
     var selectedItemPlacemark: MKPlacemark? = nil
     var currentUID: String?       //remember to store this again if the user logs out in the app
+    var actionForButton: ButtonAction = .requestRide
     
     let revealingSplashView = RevealingSplashView(iconImage: UIImage(named: "launchScreenIcon")!, iconInitialSize: CGSize(width: 80, height: 80), backgroundColor: UIColor.white)
     
@@ -46,8 +55,11 @@ class HomeVC: UIViewController, Alertable, HomeVCDelegate {
         manager?.delegate = self
         manager?.desiredAccuracy = kCLLocationAccuracyBest
         
+        cancelBtn.alpha = 0.0
+        
         checkLocationAuthStatus()
         currentUID = Auth.auth().currentUser?.uid
+        
         mapView.delegate = self
         destinationTextField.delegate = self
         
@@ -69,7 +81,6 @@ class HomeVC: UIViewController, Alertable, HomeVCDelegate {
         self.view.addSubview(revealingSplashView)
         revealingSplashView.animationType = SplashAnimationType.heartBeat
         revealingSplashView.startAnimation()
-        revealingSplashView.heartAttack = true
         
         LocationService.instance.observeTrips { (tripDict) in
             if let tripDict = tripDict {
@@ -96,6 +107,13 @@ class HomeVC: UIViewController, Alertable, HomeVCDelegate {
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
+        
+        DataService.instance.userIsDriver(userKey: currentUID!) { (status) in
+            if status == true {
+                self.buttonsForDriver(areHidden: true)
+            }
+        }
+        
         currentUID = Auth.auth().currentUser?.uid
         DataService.instance.driverIsAvailable(key: self.currentUID!) { (status) in
             if status == nil {
@@ -113,6 +131,11 @@ class HomeVC: UIViewController, Alertable, HomeVCDelegate {
                         self.dropPinFor(placemark: pickupPlacemark)
                         self.searchMapKitForResultsWithPolyLine(forOriginMapItem: nil, withDestinationMapItem: MKMapItem(placemark: pickupPlacemark))
                         self.setCustomRegion(forAnnotationType: .pickup, withCoordinate: pickupCoordinate)
+                        
+                        self.actionForButton = .getDirectionsToPassenger
+                        self.actionBtn.setTitle("GET DIRECTIONS", for: .normal)
+                        
+                        self.buttonsForDriver(areHidden: false)
                     }
                 })
             }
@@ -157,6 +180,26 @@ class HomeVC: UIViewController, Alertable, HomeVCDelegate {
         }
     }
     
+    func buttonsForDriver(areHidden: Bool) {
+        if areHidden {
+            self.actionBtn.fadeTo(alphaValue: 0.0, withDuration: 0.2)
+            self.cancelBtn.fadeTo(alphaValue: 0.0, withDuration: 0.2)
+            self.centerMapBtn.fadeTo(alphaValue: 0.0, withDuration: 0.2)
+            
+            self.actionBtn.isHidden = true
+            self.cancelBtn.isHidden = true
+            self.centerMapBtn.isHidden = true
+        } else {
+            self.actionBtn.fadeTo(alphaValue: 1.0, withDuration: 0.2)
+            self.cancelBtn.fadeTo(alphaValue: 1.0, withDuration: 0.2)
+            self.centerMapBtn.fadeTo(alphaValue: 1.0, withDuration: 0.2)
+
+            self.actionBtn.isHidden = false
+            self.cancelBtn.isHidden = false
+            self.centerMapBtn.isHidden = false
+        }
+    }
+    
     func loadDriverAnnoationsFromFB() {
         DataService.instance.REF_DRIVERS.whereField("isPickupModeEnabled", isEqualTo: true).whereField("userIsDriver", isEqualTo: true).getDocuments { (querySnapshot, error) in
             if let drivers = querySnapshot?.documents{
@@ -184,6 +227,8 @@ class HomeVC: UIViewController, Alertable, HomeVCDelegate {
                 }
             }
         }
+        
+        revealingSplashView.heartAttack = true
     }
     
     func connectUserAndDriverForTrip() {
@@ -252,13 +297,49 @@ class HomeVC: UIViewController, Alertable, HomeVCDelegate {
     }
 
     @IBAction func actionBtnPressed(_ sender: Any) {
-        LocationService.instance.updateTripsWithCoordinatesUponRequest()
-        actionBtn.animateButton(shouldLoad: true, withMessage: nil)
-        cancelBtn.fadeTo(alphaValue: 1.0, withDuration: 0.2)
-        cancelBtn.isUserInteractionEnabled = true
-        self.view.endEditing(true)
-        destinationTextField.isUserInteractionEnabled = false
-        
+        buttonSelector(foraction: actionForButton)
+    }
+    
+    
+    func buttonSelector(foraction action: ButtonAction) {
+        switch action {
+        case .requestRide:
+        // setup code to request ride
+            if destinationTextField.text != "" {
+                LocationService.instance.updateTripsWithCoordinatesUponRequest()
+                actionBtn.animateButton(shouldLoad: true, withMessage: nil)
+                cancelBtn.fadeTo(alphaValue: 1.0, withDuration: 0.2)
+                cancelBtn.isUserInteractionEnabled = true
+                self.view.endEditing(true)
+                destinationTextField.isUserInteractionEnabled = false
+            }
+        case .getDirectionsToPassenger:
+        //get dir. to pass.
+            DataService.instance.driverIsOnTrip(driverKey: currentUID!, handler: { (isOnTrip, driverKey, tripKey) in
+                if isOnTrip == true {
+                    DataService.instance.REF_TRIPS.document(tripKey!).addSnapshotListener({ (tripSnapshot, error) in
+                        if let tripSnapshot = tripSnapshot, tripSnapshot.exists {
+                            let tripDict = tripSnapshot.data()
+                            
+                            let pickupCoordinateArray = tripDict["pickupCoordinate"] as! NSArray
+                            let pickupCoordinate = CLLocationCoordinate2D(latitude: pickupCoordinateArray[0] as! CLLocationDegrees, longitude: pickupCoordinateArray[1] as! CLLocationDegrees)
+                            let pickupMapItem = MKMapItem(placemark: MKPlacemark(coordinate: pickupCoordinate))
+                            pickupMapItem.name = "Passenger Pickup Point"
+                            pickupMapItem.openInMaps(launchOptions: [MKLaunchOptionsDirectionsModeKey: MKLaunchOptionsDirectionsModeDriving])
+                        }
+                    })
+                }
+            })
+        case .startTrip:
+        //start trip
+            print("start trip selected")
+        case .getDirectionsToDestination:
+        //dir. to destination.
+            print("direction to destination selected")
+        case .endTrip:
+            //end the trip
+            print("end trip selected")
+        }
     }
     
     @IBAction func cancelBtnPressed(_ sender: Any) {
@@ -286,6 +367,7 @@ class HomeVC: UIViewController, Alertable, HomeVCDelegate {
     @IBAction func menuBtnPressed(_ sender: UIButton) {
         delegate?.toggleLeftMenu()
     }
+
     
     @IBAction func centerMapBtnPressed(_ sender: Any) {
         
