@@ -232,8 +232,11 @@ class HomeVC: UIViewController, Alertable, HomeVCDelegate {
     }
     
     func connectUserAndDriverForTrip() {
-        DataService.instance.userIsDriver(userKey: currentUID!) { (status) in
+       /* DataService.instance.passengerIsOnTrip(passengerKey: self.currentUID!) { (isOnTrip, driverKey, tripKey) in
+            if isOnTrip == true {*/
+        DataService.instance.userIsDriver(userKey: self.currentUID!) { (status) in
             if status == false {
+                print("inside IS ON TIRPERIESFJSDFLKJSDFLK:DSJFL:DSKFJSD:FLDSJKFDS")
                 DataService.instance.REF_TRIPS.document(self.currentUID!).addSnapshotListener({ (docSnapshot, error) in
                     if let docSnapshot = docSnapshot, docSnapshot.exists {
                         let tripData = docSnapshot.data()
@@ -266,6 +269,19 @@ class HomeVC: UIViewController, Alertable, HomeVCDelegate {
                                 }
                             })
                             
+                            DataService.instance.REF_TRIPS.document(self.currentUID!).getDocument(completion: { (docSnapshot, error) in
+                                if tripData["tripIsInProgress"] as? Bool == true {
+                                    self.removeOverlaysAndAnnotations(forDrivers: true, forPassengers: true)
+                                    
+                                    let destinationCoordinateArray = tripData["destinationCoordinate"] as! NSArray
+                                    let destinationCoordinate = CLLocationCoordinate2D(latitude: destinationCoordinateArray[0] as! CLLocationDegrees, longitude: destinationCoordinateArray[1] as! CLLocationDegrees)
+                                    let destinationPlacemark = MKPlacemark(coordinate: destinationCoordinate)
+                                    self.dropPinFor(placemark: destinationPlacemark)
+                                    self.searchMapKitForResultsWithPolyLine(forOriginMapItem: pickupMapItem, withDestinationMapItem: MKMapItem(placemark: destinationPlacemark))
+                                    
+                                    self.actionBtn.setTitle("ON TRIP", for: .normal)
+                                }
+                            })
                         }
                     }
                 })
@@ -332,6 +348,28 @@ class HomeVC: UIViewController, Alertable, HomeVCDelegate {
             })
         case .startTrip:
         //start trip
+            DataService.instance.driverIsOnTrip(driverKey: self.currentUID!, handler: { (isOnTrip, driverKey, tripKey) in
+                if isOnTrip == true {
+                    self.removeOverlaysAndAnnotations(forDrivers: false, forPassengers: false)
+                    
+                    DataService.instance.REF_TRIPS.document(tripKey!).updateData(["tripIsInProgress" : true])
+                    
+                    DataService.instance.REF_TRIPS.document(tripKey!).getDocument(completion: { (docSnapshot, error) in
+                        if let docSnapshot = docSnapshot, docSnapshot.exists {
+                            let docData = docSnapshot.data()
+                            let destinationCoordinateArray = docData["destinationCoordinate"] as! NSArray
+                            let destinationCoordinate = CLLocationCoordinate2D(latitude: destinationCoordinateArray[0] as! CLLocationDegrees, longitude: destinationCoordinateArray[1] as! CLLocationDegrees)
+                            let destinationPlacemark = MKPlacemark(coordinate: destinationCoordinate)
+                            self.dropPinFor(placemark: destinationPlacemark)
+                            self.searchMapKitForResultsWithPolyLine(forOriginMapItem: nil, withDestinationMapItem: MKMapItem(placemark: destinationPlacemark))
+                            
+                            self.setCustomRegion(forAnnotationType: .destination, withCoordinate: destinationCoordinate)
+                            self.actionForButton = .getDirectionsToDestination
+                            self.actionBtn.setTitle("GET DIRECTIONS", for: .normal)
+                        }
+                    })
+                }
+            })
             print("start trip selected")
         case .getDirectionsToDestination:
         //dir. to destination.
@@ -426,6 +464,7 @@ extension HomeVC: CLLocationManagerDelegate {
         DataService.instance.driverIsOnTrip(driverKey: currentUID!) { (isOnTrip, driverKey, passengerKey) in
             if isOnTrip == true {
                 if region.identifier == "pickup" {
+                    self.actionForButton = .startTrip
                     self.actionBtn.setTitle("START TRIP", for: .normal)
                     print("Driver entered pickup region")
                 } else if region.identifier == "destination" {
@@ -577,9 +616,9 @@ extension HomeVC: MKMapViewDelegate {
             }
             self.route = response.routes[0]
             
-            if self.mapView.overlays.count == 0 {
+            //if self.mapView.overlays.count == 0 {
                 self.mapView.add(self.route.polyline)
-            }
+            //}
             
             self.zoom(toFitAnnotationsFromMapView: self.mapView, forActiveTripWithDriver: false, withKey: nil)
             
