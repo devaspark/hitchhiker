@@ -74,7 +74,7 @@ class LocationService {
             let pickupArray = data!["coordinate"] as! NSArray
             let destinationArray = data!["tripCoordinate"] as! NSArray
             
-            DataService.instance.REF_TRIPS.document(uid).setData(["pickupCoordinate" : [pickupArray[0], pickupArray[1]], "destinationCoordinate" : [destinationArray[0], destinationArray[1]], "passengerKey" : uid, "tripIsAccepted": false], options: SetOptions.merge())
+            DataService.instance.REF_TRIPS.document(uid).setData(["pickupCoordinate" : [pickupArray[0], pickupArray[1]], "destinationCoordinate" : [destinationArray[0], destinationArray[1]], "passengerKey" : uid, "tripIsAccepted": false, "tripIsInProgress" : false], options: SetOptions.merge())
         }
     }
     
